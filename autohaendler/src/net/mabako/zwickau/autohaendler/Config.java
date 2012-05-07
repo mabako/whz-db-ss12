@@ -19,6 +19,15 @@ public final class Config
 		return "Datenbanken II - Autohändler";
 	}
 	
+	/**
+	 * Gibt den Namen der verwendeten Datenbank zurück.
+	 * @return
+	 */
+	public static String getDatabaseName()
+	{
+		return "autohaendler";
+	}
+	
 	/*
 	 * Grafische Oberfläche
 	 */
