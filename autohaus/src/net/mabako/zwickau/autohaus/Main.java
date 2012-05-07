@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
 import java.awt.SystemColor;
@@ -26,13 +29,14 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
+		updateLookAndFeel();
 		EventQueue.invokeLater(new Runnable()
 		{
 			public void run()
 			{
 				try
 				{
-					Main window = new Main();
+					Main window = new Main(new LoginWindow());
 					window.frame.setVisible(true);
 				}
 				catch (Exception e)
@@ -43,18 +47,30 @@ public class Main
 		});
 	}
 
+	private static void updateLookAndFeel()
+	{
+		try
+		{
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch(Exception e)
+		{
+			
+		}
+	}
+
 	/**
 	 * Create the application.
 	 */
-	public Main()
+	public Main(JPanel content)
 	{
-		initialize();
+		initialize(content);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
+	private void initialize(JPanel content)
 	{
 		frame = new JFrame();
 		frame.setTitle("Datenbanken II - Autohaus");
@@ -64,18 +80,17 @@ public class Main
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new MigLayout("fill,insets 0,gap 3", "[grow]", "[100px:100px:100px][grow]"));
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.WHITE);
-		frame.getContentPane().add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("fill", "[]", "[]"));
+		JPanel header = new JPanel();
+		header.setBackground(Color.WHITE);
+		frame.getContentPane().add(header, "cell 0 0,grow");
+		header.setLayout(new MigLayout("fill", "[]", "[]"));
 		
 		JLabel lblAutohaus = new JLabel("Autohaus");
 		lblAutohaus.setForeground(SystemColor.activeCaption);
 		lblAutohaus.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		panel.add(lblAutohaus, "cell 0 0,alignx center,aligny bottom");
+		header.add(lblAutohaus, "cell 0 0,alignx center,aligny bottom");
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(SystemColor.inactiveCaptionBorder);
-		frame.getContentPane().add(panel_1, "cell 0 1,grow");
+		content.setBackground(SystemColor.inactiveCaptionBorder);
+		frame.getContentPane().add(content, "cell 0 1,grow");
 	}
 }
