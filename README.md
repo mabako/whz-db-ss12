@@ -1,5 +1,5 @@
-Datenbanken II - Autohaus
-=========================
+Datenbanken II - Autohändler
+============================
 
 Semesterprojekt für Datenbanken II-Vorlesung - Prüfungsvoraussetzung.
 

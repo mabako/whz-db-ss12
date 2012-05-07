@@ -1,4 +1,4 @@
-package net.mabako.zwickau.autohaus;
+package net.mabako.zwickau.autohaendler;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

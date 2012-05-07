@@ -1,4 +1,4 @@
-package net.mabako.zwickau.autohaus;
+package net.mabako.zwickau.autohaendler;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -6,11 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
-import java.awt.SystemColor;
 import javax.swing.JLabel;
 import java.awt.Font;
 

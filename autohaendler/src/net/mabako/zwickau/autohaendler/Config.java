@@ -1,4 +1,4 @@
-package net.mabako.zwickau.autohaus;
+package net.mabako.zwickau.autohaendler;
 
 import java.awt.Color;
 
@@ -16,7 +16,7 @@ public final class Config
 	 */
 	public static String getAppName()
 	{
-		return "Datenbanken II - Autohaus";
+		return "Datenbanken II - Autohändler";
 	}
 	
 	/*
