@@ -73,8 +73,8 @@ public class Main
 	private void initialize(JPanel content)
 	{
 		frame = new JFrame();
-		frame.setTitle("Datenbanken II - Autohaus");
-		frame.getContentPane().setBackground(SystemColor.inactiveCaption);
+		frame.setTitle(Config.getAppName());
+		frame.getContentPane().setBackground(Config.getSeparatorColor());
 		frame.setBounds(100, 100, 450, 300);
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,12 +85,12 @@ public class Main
 		frame.getContentPane().add(header, "cell 0 0,grow");
 		header.setLayout(new MigLayout("fill", "[]", "[]"));
 		
-		JLabel lblAutohaus = new JLabel("Autohaus");
-		lblAutohaus.setForeground(SystemColor.activeCaption);
+		JLabel lblAutohaus = new JLabel(Config.getAppName());
+		lblAutohaus.setForeground(Config.getSeparatorColor());
 		lblAutohaus.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		header.add(lblAutohaus, "cell 0 0,alignx center,aligny bottom");
 		
-		content.setBackground(SystemColor.inactiveCaptionBorder);
+		content.setBackground(Config.getBackgroundColor());
 		frame.getContentPane().add(content, "cell 0 1,grow");
 	}
 }
