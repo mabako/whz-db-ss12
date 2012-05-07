@@ -32,7 +32,9 @@ Bedienungsanleitung
 Präsentation
 ------------
 * 15 Minuten
-* 18.06., 20.06.
+* **Termin**
+  * 18.06. 9:20 - 10:50, 13:30 - 15:00
+  * 20.06. 7:30 - 9:00
 * Inhalt:
   * Verwendete Software
   * Darstellung der Oberfläche
