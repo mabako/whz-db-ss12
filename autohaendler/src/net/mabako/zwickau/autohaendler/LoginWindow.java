@@ -34,8 +34,11 @@ public class LoginWindow extends JPanel
 	{
 		setLayout(new MigLayout("", "[20%:20%:20%][][grow][20%:20%:20%]", "[20%:20%:20%][][5%:5%:5%][][][][grow]"));
 		
-		final JLabel lblPleaseLogin = new JLabel("Bitte melden Sie sich mit Ihrem Benutzername und Passwort an.");
+		JLabel lblPleaseLogin = new JLabel("Bitte melden Sie sich mit Ihrem Benutzername und Passwort an.");
 		add(lblPleaseLogin, "cell 1 1 2 1,alignx center");
+		
+		final JLabel lblError = new JLabel("");
+		add(lblError, "cell 1 2 2 1,alignx center");
 		
 		JLabel lblUsername = new JLabel("Benutzername:");
 		add(lblUsername, "cell 1 3,alignx right");
@@ -58,9 +61,9 @@ public class LoginWindow extends JPanel
 			{
 				try {
 					db.connectSQLAuth(Config.getServer(), textUsername.getText(), new String(textPassword.getPassword()));
-					lblPleaseLogin.setText("Anmeldung erfolgreich.");
+					lblError.setText("Anmeldung erfolgreich.");
 				} catch(Exception ex) {
-					lblPleaseLogin.setText(ex.getMessage());
+					lblError.setText(ex.getMessage());
 				}
 			}
 		});
