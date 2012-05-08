@@ -1,11 +1,9 @@
 package net.mabako.zwickau.autohaendler;
 
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -14,6 +12,7 @@ import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 import static net.mabako.zwickau.autohaendler.G.db;
+import static net.mabako.zwickau.autohaendler.G.main;
 
 /**
  * Ein Panel zum Anmelden an der Datenbank.
@@ -130,17 +129,6 @@ public class Login extends JPanel
 	 */
 	protected void close()
 	{
-		Container start = this;
-		do
-		{
-			Container parent = start.getParent();
-			if(parent instanceof JFrame)
-			{
-				JFrame frame = (JFrame)parent;
-				frame.dispose();
-				break;
-			}
-			start = parent;
-		} while(start != null);
+		main.getWindow().dispose();
 	}
 }

@@ -13,6 +13,14 @@ import net.mabako.zwickau.db.Database;
  */
 public class G
 {
+	/**
+	 * Instanz der Main-Methode, die hauptsächlich zur Navigation benutzt werden kann.
+	 */
+	public static Main main = null;
+	
+	/**
+	 * Datenbankinstanz
+	 */
 	public static Database db = new Database();
 	
 	/**
