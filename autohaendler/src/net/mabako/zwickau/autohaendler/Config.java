@@ -3,17 +3,21 @@ package net.mabako.zwickau.autohaendler;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -37,6 +41,11 @@ public final class Config
 	 * Namen aller Variablen, die in der Konfiguration als Farbe vorliegen.
 	 */
 	private static String[] colorValues = {"color:separator", "color:background"};
+	
+	/**
+	 * Name aller Variablen, die in der Konfiguration als Liste vorliegen.
+	 */
+	private static String[] listValues = {"db:auth"};
 	
 	/**
 	 * Liefert ein Konfigurationselement als String.
@@ -83,6 +92,12 @@ public final class Config
 	public static String getDatabaseName()
 	{
 		return getString("db:database");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<String> getDatabaseAuthenticationMethods()
+	{
+		return (List<String>) configuration.get("db:auth");
 	}
 	
 	/*
@@ -144,14 +159,34 @@ public final class Config
 			
 			// Alle String-Werte auslesen
 			for(String key : stringValues)
-				configuration.put(key, xpath.evaluate("//" + key, doc));
+				configuration.put(key, xpath.evaluate("/*/" + key, doc));
 			
+			// Alle Farben auslesen
 			for(String key : colorValues)
 			{
-				int red = Integer.valueOf(xpath.evaluate("//" + key + "/@red", doc));
-				int green = Integer.valueOf(xpath.evaluate("//" + key + "/@green", doc));
-				int blue = Integer.valueOf(xpath.evaluate("//" + key + "/@blue", doc));
+				int red = Integer.valueOf(xpath.evaluate("/*/" + key + "/@red", doc));
+				int green = Integer.valueOf(xpath.evaluate("/*/" + key + "/@green", doc));
+				int blue = Integer.valueOf(xpath.evaluate("/*/" + key + "/@blue", doc));
 				configuration.put(key, new Color(red, green, blue));
+			}
+			
+			// Liest eine Liste ein, dabei ist das Format ähnlich
+			// <key>
+			//   <beliebig>Wert 1</beliebig>
+			//   <beliebig>Wert 2</beliebig>
+			// </key>
+			for(String key : listValues)
+			{
+				List<String> list = new ArrayList<String>();
+				
+				// Sämtliche Unterknoten ermitteln.
+				NodeList nodes = (NodeList) xpath.evaluate("/*/" + key + "/*", doc, XPathConstants.NODESET);
+				
+				// In die erstellte Liste einfügen.
+				for(int i = 0; i < nodes.getLength(); ++ i)
+					list.add(nodes.item(i).getTextContent());
+				
+				configuration.put(key, list);
 			}
 		}
 		catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e)

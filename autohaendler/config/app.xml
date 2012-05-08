@@ -14,6 +14,16 @@
 	<!-- Name der Datenbank -->
 	<db:database>autohaendler</db:database>
 	
+	<!-- Anmeldemöglichkeiten -->
+	<db:auth>
+		<!-- Wenn die Windows-Anmeldung gegeben ist, wird diese generell bevorzugt.
+		     Erfordert die für die Architektur (32- oder 64-Bit) die entsprechende'ntlmauth.dll'. -->
+		<auth>windows</auth>
+		
+		<!-- Anmeldung mittels SQL-Server-Login. -->
+		<auth>sql</auth>
+	</db:auth>
+	
 	<!-- Farben -->
 	<color:separator red="191" green="205" blue="219" />
 	<color:background red="244" green="247" blue="252" />

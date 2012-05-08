@@ -34,11 +34,47 @@ public class Login extends JPanel
 	{
 		setLayout(new MigLayout("", "[20%:20%:20%][][grow][20%:20%:20%]", "[20%:20%:20%][][5%:5%:5%][][][][grow]"));
 		
+		JLabel lblError = new JLabel("");
+		add(lblError, "cell 1 2 2 1,alignx center");
+		
+		if(Config.getDatabaseAuthenticationMethods().contains("windows"))
+		{
+			try
+			{
+				db.connectWindowsAuth(Config.getServer());
+				
+				successfulLogin();
+				return;
+			}
+			catch(Exception e)
+			{
+				lblError.setText("Windows-Anmeldung: " + e.getMessage());
+			}
+		}
+		
+		if(Config.getDatabaseAuthenticationMethods().contains("sql"))
+		{
+			initializeClassicLogin(lblError);
+		}
+		else
+		{
+			String oldText = lblError.getText();
+			// Zeilenumbrüche -> HTML erforderlich.
+			if(oldText.length() > 0)
+				oldText += "<br/><br/>";
+			
+			lblError.setText("<html><body align='center'>" + oldText + "Es sind keine Authentifizierungsmethoden verfügbar.</body></html>");
+		}
+	}
+
+	/**
+	 * Erstellt ein Login mit Benutzername und Passwort im aktuellen Frame.
+	 * @param lblError Label, in welches Fehlermeldungen ausgegeben werden.
+	 */
+	private void initializeClassicLogin(final JLabel lblError)
+	{
 		JLabel lblPleaseLogin = new JLabel("Bitte melden Sie sich mit Ihrem Benutzername und Passwort an.");
 		add(lblPleaseLogin, "cell 1 1 2 1,alignx center");
-		
-		final JLabel lblError = new JLabel("");
-		add(lblError, "cell 1 2 2 1,alignx center");
 		
 		JLabel lblUsername = new JLabel("Benutzername:");
 		add(lblUsername, "cell 1 3,alignx right");
@@ -61,7 +97,7 @@ public class Login extends JPanel
 			{
 				try {
 					db.connectSQLAuth(Config.getServer(), textUsername.getText(), new String(textPassword.getPassword()));
-					lblError.setText("Anmeldung erfolgreich.");
+					successfulLogin();
 				} catch(Exception ex) {
 					lblError.setText(ex.getMessage());
 				}
@@ -81,6 +117,14 @@ public class Login extends JPanel
 		add(btnCancel, "flowx,cell 1 5 2 1,alignx center");
 	}
 	
+	/**
+	 * Wird nach einem erfolgreichen Login aufgerufen.
+	 */
+	protected void successfulLogin()
+	{
+		// TODO Auto-generated method stub
+	}
+
 	/**
 	 * Schließt das Fenster, welches dieses Loginfenster beinhaltet.
 	 */
