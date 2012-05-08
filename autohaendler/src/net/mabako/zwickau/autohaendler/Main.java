@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.util.Stack;
 
+import static net.mabako.zwickau.autohaendler.G.main;
+
 /**
  * Grafisches Hauptfenster.
  * 
@@ -56,9 +58,9 @@ public class Main
 			{
 				try
 				{
-					G.main = new Main();
-					G.main.setHomeWindow(new Login());
-					G.main.frame.setVisible(true);
+					main = new Main();
+					main.setHomeWindow(new Login());
+					main.frame.setVisible(true);
 				}
 				catch (Exception e)
 				{
