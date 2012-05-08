@@ -156,7 +156,6 @@ public final class Config
 		}
 		catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e)
 		{
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}
