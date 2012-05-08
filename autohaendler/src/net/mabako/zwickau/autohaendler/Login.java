@@ -16,11 +16,11 @@ import net.miginfocom.swing.MigLayout;
 import static net.mabako.zwickau.autohaendler.G.db;
 
 /**
- * Ein in das Hauptfenster einbettbare Panel, welches das Anmelden erlaubt.
+ * Ein Panel zum Anmelden an der Datenbank.
  * 
  * @author Marcus Bauer (mabako@gmail.com)
  */
-public class LoginWindow extends JPanel
+public class Login extends JPanel
 {
 	/**
 	 * automatisch generierte Serial
@@ -30,7 +30,7 @@ public class LoginWindow extends JPanel
 	/**
 	 * Create the panel.
 	 */
-	public LoginWindow()
+	public Login()
 	{
 		setLayout(new MigLayout("", "[20%:20%:20%][][grow][20%:20%:20%]", "[20%:20%:20%][][5%:5%:5%][][][][grow]"));
 		

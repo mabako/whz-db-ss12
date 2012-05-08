@@ -35,7 +35,7 @@ public class Main
 			{
 				try
 				{
-					Main window = new Main(new LoginWindow());
+					Main window = new Main(new Login());
 					window.frame.setVisible(true);
 				}
 				catch (Exception e)
