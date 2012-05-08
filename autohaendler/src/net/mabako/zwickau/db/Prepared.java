@@ -102,6 +102,20 @@ public class Prepared
 	}
 
 	/**
+	 * Führt eine Abfrage aus und liefert das erste Ergebnisse zurück.
+	 * @param objects alle Objekte, die als Parameter (statt ?) übergeben werden sollen
+	 * @return das erste Ergebnis, oder <code>null</code> falls keins gefunden.
+	 * @see Prepared#executeWithResult(Object...)
+	 */
+	public Result executeWithSingleResult(Object... objects)
+	{
+		Results results = executeWithResult(objects);
+		if(results.size() > 0)
+			return results.get(0);
+		return null;
+	}
+	
+	/**
 	 * Schließt das Statement.
 	 */
 	public void close()
