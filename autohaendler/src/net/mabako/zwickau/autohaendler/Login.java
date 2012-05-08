@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import net.mabako.zwickau.db.Prepared;
 import net.miginfocom.swing.MigLayout;
 
 import static net.mabako.zwickau.autohaendler.G.db;
@@ -121,7 +122,11 @@ public class Login extends JPanel
 	 */
 	protected void successfulLogin()
 	{
-		// TODO Auto-generated method stub
+		// Namen des Benutzers (auf dem SQL-Server) anzeigen
+		Prepared p = db.prepare("SELECT SUSER_SNAME() AS username");
+		String username = p.executeWithSingleResult().getString("username");
+		main.setLoggedInAs(username);
+		p.close();
 	}
 
 	/**
