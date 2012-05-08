@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.mabako.zwickau.autohaendler.Config;
 import net.mabako.zwickau.db.Database;
 import net.mabako.zwickau.db.Prepared;
 import net.mabako.zwickau.db.Result;
@@ -34,7 +35,7 @@ public class MigrateTool
 	{
 		db = new Database();
 		
-		String server = args.length >= 1 ? args[0] : "localhost:1433";
+		String server = args.length >= 1 ? args[0] : Config.getServer();
 		if (args.length >= 3 ? db.connectSQLAuth(server, args[1], args[2]) : db.connectWindowsAuth(server))
 		{
 			createMigrationsTable();

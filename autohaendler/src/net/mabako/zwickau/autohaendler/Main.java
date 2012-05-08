@@ -18,7 +18,9 @@ import java.awt.Font;
  */
 public class Main
 {
-
+	/**
+	 * Fenster
+	 */
 	private JFrame frame;
 
 	/**

@@ -84,7 +84,8 @@ public class Database
 
 		try
 		{
-			con = DriverManager.getConnection("jdbc:jtds:sqlserver://" + server + "/" + Config.getDatabaseName());
+			String connectionStr = "jdbc:jtds:sqlserver://" + server + "/" + Config.getDatabaseName();
+			con = DriverManager.getConnection(connectionStr, username, password);
 		}
 		catch (SQLException e)
 		{

@@ -1,0 +1,20 @@
+<config
+	xmlns:app="app://"
+	xmlns:db="db://"
+	xmlns:color="color://">
+	
+	<!-- Name der Anwendung, welche im Titel und im Header angezeigt wird. -->
+	<app:name>DB II - Autohändler</app:name>
+	
+	<!-- Datenbank-Konfiguration -->
+	<!-- Der Server, zu welchem verbunden wird.
+		 Ein Port kann angegeben werden, ist aber optional. -->
+	<db:server>localhost:1433</db:server>
+	
+	<!-- Name der Datenbank -->
+	<db:database>autohaendler</db:database>
+	
+	<!-- Farben -->
+	<color:separator red="191" green="205" blue="219" />
+	<color:background red="244" green="247" blue="252" />
+</config>
