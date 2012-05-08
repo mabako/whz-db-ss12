@@ -17,7 +17,7 @@ public class Database
 	 * Unsere Verbindung zur Datenbank
 	 */
 	private Connection con = null;
-
+	
 	/**
 	 * Verbindet zu einer Datenbank mittels SQL-Server-Authentifizierung
 	 * 
@@ -27,13 +27,16 @@ public class Database
 	 *            der Benutzername
 	 * @param password
 	 *            das Passwort
-	 * @return <code>true</code> falls die Verbindung erfolgreich war.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public boolean connectSQLAuth(String server, String username, String password)
+	public void connectSQLAuth(String server, String username, String password) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		if (username == null || username.length() == 0 || password == null || password.length() == 0)
-			return false;
-		return connectInternal(server, username, password);
+			throw new SQLException("Benutzername und Passwort dürfen nicht leer sein.");
+		connectInternal(server, username, password);
 	}
 
 	/**
@@ -41,11 +44,14 @@ public class Database
 	 * 
 	 * @param server
 	 *            der anzusprechende Server mit IP:Port
-	 * @return <code>true</code> falls die Verbindung erfolgreich war.
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws SQLException 
 	 */
-	public boolean connectWindowsAuth(String server)
+	public void connectWindowsAuth(String server) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
-		return connectInternal(server, null, null);
+		connectInternal(server, null, null);
 	}
 
 	/**
@@ -58,9 +64,12 @@ public class Database
 	 * @param server
 	 * @param username
 	 * @param password
-	 * @return
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws SQLException 
 	 */
-	private boolean connectInternal(String server, String username, String password)
+	private void connectInternal(String server, String username, String password) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
 	{
 		try
 		{
@@ -72,27 +81,10 @@ public class Database
 			e.printStackTrace();
 		}
 
-		try
-		{
-			Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
+		Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
 
-		try
-		{
-			String connectionStr = "jdbc:jtds:sqlserver://" + server + "/" + Config.getDatabaseName();
-			con = DriverManager.getConnection(connectionStr, username, password);
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		return (con != null);
+		String connectionStr = "jdbc:jtds:sqlserver://" + server + "/" + Config.getDatabaseName();
+		con = DriverManager.getConnection(connectionStr, username, password);
 	}
 
 	/**

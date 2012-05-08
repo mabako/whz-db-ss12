@@ -12,9 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.mabako.zwickau.autohaendler.Config;
-import net.mabako.zwickau.db.Database;
 import net.mabako.zwickau.db.Prepared;
 import net.mabako.zwickau.db.Result;
+
+import static net.mabako.zwickau.autohaendler.G.db;
 
 /**
  * Kleines Tool, um auf mehreren Rechnern konsistent zu entwickeln.
@@ -29,19 +30,21 @@ import net.mabako.zwickau.db.Result;
  */
 public class MigrateTool
 {
-	private static Database db;
-
 	public static void main(String args[])
 	{
-		db = new Database();
-		
 		String server = args.length >= 1 ? args[0] : Config.getServer();
-		if (args.length >= 3 ? db.connectSQLAuth(server, args[1], args[2]) : db.connectWindowsAuth(server))
-		{
+		try {
+			if(args.length >= 3)
+				db.connectSQLAuth(server, args[1], args[2]);
+			else
+				db.connectWindowsAuth(server);
+			
 			createMigrationsTable();
 			doMigrations(getAllMigrations(), getAllCompletedMigrations());
 
 			db.disconnect();
+		} catch(Exception e) {
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
 
