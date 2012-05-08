@@ -33,7 +33,9 @@ public class MigrateTool
 	public static void main(String args[])
 	{
 		db = new Database();
-		if (db.connectWindowsAuth("localhost:1433"))
+		
+		String server = args.length >= 1 ? args[0] : "localhost:1433";
+		if (args.length >= 3 ? db.connectSQLAuth(server, args[1], args[2]) : db.connectWindowsAuth(server))
 		{
 			createMigrationsTable();
 			doMigrations(getAllMigrations(), getAllCompletedMigrations());

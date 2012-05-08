@@ -37,6 +37,7 @@ Präsentation
   * 20.06. 7:30 - 9:00
 * Inhalt:
   * Verwendete Software
+    * Java + JDBC + jTDS
   * Darstellung der Oberfläche
   * Darstellung der Bedienungsanleitung
   * Benötigter zeitlicher Umfang zur Erstellung
