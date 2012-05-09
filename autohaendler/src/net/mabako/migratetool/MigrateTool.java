@@ -122,9 +122,11 @@ public class MigrateTool
 			if (!allCompletedMigrations.contains(migration))
 			{
 				System.out.println("Migration: " + file.getName() + "...");
+				Prepared prepared = null;
 				try
 				{
-					if(db.transaction(db.prepare(readFile(file))))
+					prepared = db.prepare(readFile(file));
+					if(db.transaction(prepared))
 					{
 						addMigration.executeNoResult(migration);
 						System.out.println(" ... OK");
@@ -140,6 +142,11 @@ public class MigrateTool
 					System.out.println(" ... Datei-Fehler");
 					e.printStackTrace();
 					return;
+				}
+				finally
+				{
+					if(prepared != null)
+						prepared.close();
 				}
 			}
 		}
