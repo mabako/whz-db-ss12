@@ -3,6 +3,7 @@ package net.mabako.zwickau.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import net.mabako.zwickau.autohaendler.Config;
 
@@ -13,6 +14,8 @@ import net.mabako.zwickau.autohaendler.Config;
  */
 public class Database
 {
+	HashMap<Prepared, String> openStatements = new HashMap<Prepared, String>( );
+	
 	/**
 	 * Unsere Verbindung zur Datenbank
 	 */
@@ -95,6 +98,13 @@ public class Database
 		if (con != null)
 			try
 			{
+				if(openStatements.size() > 0)
+				{
+					System.out.println("Offene Statements (" + openStatements.size() + ")");
+					for(String statement : openStatements.values())
+						System.out.println("  " + statement);
+				}
+				
 				con.close();
 			}
 			catch (SQLException e)
@@ -115,7 +125,9 @@ public class Database
 	{
 		try
 		{
-			return new Prepared(con.prepareStatement(sql));
+			Prepared p = new Prepared(con.prepareStatement(sql));
+			openStatements.put(p, sql);
+			return p;
 		}
 		catch (SQLException e)
 		{
@@ -178,5 +190,15 @@ public class Database
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * Löscht ein Prepared Statement in der Liste der offenen Statements.
+	 * @param p
+	 * @see Prepared#close()
+	 */
+	void freePreparedStatement(Prepared p)
+	{
+		openStatements.remove(p);
 	}
 }

@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import static net.mabako.zwickau.autohaendler.G.db;
+
 /**
  * Wrapper-Klasse für Prepared Statements
  * 
@@ -123,6 +125,7 @@ public class Prepared
 		try
 		{
 			statement.close();
+			db.freePreparedStatement(this);
 		}
 		catch(SQLException e)
 		{
