@@ -11,8 +11,11 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Stack;
 
+import static net.mabako.zwickau.autohaendler.G.db;
 import static net.mabako.zwickau.autohaendler.G.main;
 
 /**
@@ -120,6 +123,47 @@ public class Main
 		lblAutohaus.setForeground(Config.getSeparatorColor());
 		lblAutohaus.setFont(new Font(lblAutohaus.getFont().getFontName(), lblAutohaus.getFont().getStyle(), 32));
 		header.add(lblAutohaus, "cell 0 1,alignx center,aligny bottom");
+		
+		frame.addWindowListener(new WindowListener()
+		{
+			
+			@Override
+			public void windowOpened(WindowEvent e)
+			{
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e)
+			{
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e)
+			{
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e)
+			{
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e)
+			{
+				if(db != null)
+					db.disconnect();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e)
+			{
+			}
+		});
 	}
 	
 	/**
