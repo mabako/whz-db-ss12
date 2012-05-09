@@ -162,6 +162,7 @@ public class Database
 			
 			// Befehl "jetzt schon" ausführen
 			boolean retVal = prepared.executeNoResult();
+			con.commit();
 
 			con.setAutoCommit(autoCommit);
 			return retVal;
