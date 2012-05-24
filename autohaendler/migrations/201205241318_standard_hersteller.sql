@@ -1,0 +1,27 @@
+SET IDENTITY_INSERT hersteller ON;
+INSERT INTO hersteller (id, name) VALUES
+	(1, 'Audi'),
+	(2, 'BMW'),
+	(3, 'Citroen'),
+	(4, 'Fiat'),
+	(5, 'Ford'),
+	(6, 'Honda'),
+	(7, 'Mazda'),
+	(8, 'Mercedes-Benz'),
+	(9, 'Mitsubishi'),
+	(10, 'Nissan'),
+	(11, 'Opel'),
+	(12, 'Peugeot'),
+	(13, 'Porsche'),
+	(14, 'Renault'),
+	(15, 'Rover'),
+	(16, 'Saab'),
+	(17, 'Seat'),
+	(18, 'Skoda'),
+	(19, 'Smart'),
+	(20, 'Subaru'),
+	(21, 'Suzuki'),
+	(22, 'Toyota'),
+	(23, 'Volvo'),
+	(24, 'VW');
+SET IDENTITY_INSERT hersteller OFF;
