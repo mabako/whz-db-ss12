@@ -10,6 +10,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import net.mabako.zwickau.autohaendler.Config;
 import net.mabako.zwickau.autohaendler.TableViewLink;
 
 import static net.mabako.zwickau.autohaendler.G.db;
@@ -128,35 +129,47 @@ public class Results extends Vector<Result> implements TableModel
 			result.put(columnNames.get(columnIndex+1), aValue);
 			
 			// Jetzt versuchen wir, einen neuen Datensatz mit allen bisher eingegebenen Parametern zu erzeugen
-			ArrayList<Object> params = new ArrayList<>();
-			
-			String fields = ""; // Feldnamen
-			String paramsQuery = ""; // Query-Parameter, in etwa ?,?,?,?,?
-			for(int i = 1; i < columnNames.size(); ++ i)
+			Prepared checkAllowsNull = db.prepare("SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? AND IS_NULLABLE = 'YES'");
+			try
 			{
-				System.out.println(result.get(columnNames.get(i)));
-				if(result.get(columnNames.get(i)) != null)
+				ArrayList<Object> params = new ArrayList<>();
+				
+				String fields = ""; // Feldnamen
+				String paramsQuery = ""; // Query-Parameter, in etwa ?,?,?,?,?
+				for(int i = 1; i < columnNames.size(); ++ i)
 				{
-					fields += "," + columnNames.get(i);
-					paramsQuery += ",?";
-					params.add(result.get(columnNames.get(i)));
+					String columnName = columnNames.get(i);
+					if(result.get(columnName) != null)
+					{
+						fields += "," + columnName;
+						paramsQuery += ",?";
+						params.add(result.get(columnName));
+					}
+					else
+					{
+						if(!"id".equalsIgnoreCase(columnName) && checkAllowsNull.executeWithSingleResult(Config.getDatabaseName(), tableName, columnName).getInt("count") == 0)
+							throw new Exception(columnName + " doesn't allow null");
+					}
+				}
+				
+				// INSERT ausführen
+				Prepared insert = db.prepare("INSERT INTO " + tableName + " (" + fields.substring(1) + ") VALUES (" + paramsQuery.substring(1) + ")");
+				
+				Integer id = insert.executeInsert(params.toArray());
+				insert.close();
+				
+				if(id != null)
+				{
+					// Kompletten Datensatz abfragen, um auch Standardwerte zu definieren.
+					Prepared p = db.prepare("SELECT * FROM " + tableName + " WHERE id = ?");
+					set(rowIndex, p.executeWithSingleResult(id));
+					p.close();
 				}
 			}
-			
-			// INSERT ausführen
-			Prepared insert = db.prepare("INSERT INTO " + tableName + " (" + fields.substring(1) + ") VALUES (" + paramsQuery.substring(1) + ")");
-			
-			Integer id = insert.executeInsert(params.toArray());
-			System.out.println(id);
-			insert.close();
-			
-			if(id != null)
+			catch(Exception e)
 			{
-				// Kompletten Datensatz abfragen, um auch Standardwerte zu definieren.
-				Prepared p = db.prepare("SELECT * FROM " + tableName + " WHERE id = ?");
-				set(rowIndex, p.executeWithSingleResult(id));
-				p.close();
 			}
+			checkAllowsNull.close();
 			
 			for(TableModelListener l : listener)
 			{
