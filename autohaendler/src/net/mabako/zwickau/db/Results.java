@@ -1,12 +1,16 @@
 package net.mabako.zwickau.db;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.JComboBox;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
+import net.mabako.zwickau.autohaendler.TableViewLink;
 
 import static net.mabako.zwickau.autohaendler.G.db;
 
@@ -38,6 +42,11 @@ public class Results extends Vector<Result> implements TableModel
 		this.tableName = tableName;
 	}
 
+	/**
+	 * Gibt die Anzahl der tatsächlichen Zeilen + 1 zurück.
+	 * 
+	 * Das +1 kommt daher, dass eine leere Zeile zum Einfügen eingeblendet wird.
+	 */
 	@Override
 	public int getRowCount()
 	{
@@ -65,6 +74,9 @@ public class Results extends Vector<Result> implements TableModel
 	{
 		try
 		{
+			if(columnNames.get(columnIndex+1).endsWith("_id"))
+				return JComboBox.class;
+			
 			return getValueAt(0, columnIndex).getClass();
 		}
 		catch(Exception e)
@@ -99,21 +111,76 @@ public class Results extends Vector<Result> implements TableModel
 		if(tableName == null)
 			throw new IllegalStateException("no tableName given");
 		
-		Prepared update = db.prepare("UPDATE " + tableName + " SET " + columnNames.get(columnIndex+1) + " = ? WHERE " + columnNames.get(1) + " = ?");
-		boolean success = update.executeNoResult(aValue, getValueAt(rowIndex, 0));
-		update.close();
+		if(aValue instanceof TableViewLink)
+			aValue = ((TableViewLink)aValue).getID();
 		
-		if(success)
+		// Neuer Datensatz -> keine ID -> kein Update
+		Result result = rowIndex < size() ? get(rowIndex) : null;
+		if(result == null || result.getInt("1") == null)
 		{
-			get(rowIndex).put(String.valueOf(columnIndex+1), aValue);
-			get(rowIndex).put(getColumnName(columnIndex), aValue);
+			if(result == null)
+			{
+				result = new Result();
+				add(result);
+			}
+			
+			result.put(String.valueOf(columnIndex+1), aValue);
+			result.put(columnNames.get(columnIndex+1), aValue);
+			
+			// Jetzt versuchen wir, einen neuen Datensatz mit allen bisher eingegebenen Parametern zu erzeugen
+			ArrayList<Object> params = new ArrayList<>();
+			
+			String fields = ""; // Feldnamen
+			String paramsQuery = ""; // Query-Parameter, in etwa ?,?,?,?,?
+			for(int i = 1; i < columnNames.size(); ++ i)
+			{
+				System.out.println(result.get(columnNames.get(i)));
+				if(result.get(columnNames.get(i)) != null)
+				{
+					fields += "," + columnNames.get(i);
+					paramsQuery += ",?";
+					params.add(result.get(columnNames.get(i)));
+				}
+			}
+			
+			// INSERT ausführen
+			Prepared insert = db.prepare("INSERT INTO " + tableName + " (" + fields.substring(1) + ") VALUES (" + paramsQuery.substring(1) + ")");
+			
+			Integer id = insert.executeInsert(params.toArray());
+			System.out.println(id);
+			insert.close();
+			
+			if(id != null)
+			{
+				// Kompletten Datensatz abfragen, um auch Standardwerte zu definieren.
+				Prepared p = db.prepare("SELECT * FROM " + tableName + " WHERE id = ?");
+				set(rowIndex, p.executeWithSingleResult(id));
+				p.close();
+			}
+			
 			for(TableModelListener l : listener)
 			{
 				l.tableChanged(new TableModelEvent(this, rowIndex));
 			}
 		}
 		else
-			throw new RuntimeException("failed to update " + tableName);
+		{
+			Prepared update = db.prepare("UPDATE " + tableName + " SET " + columnNames.get(columnIndex+1) + " = ? WHERE " + columnNames.get(1) + " = ?");
+			boolean success = update.executeNoResult(aValue, getValueAt(rowIndex, 0));
+			update.close();
+			
+			if(success)
+			{
+				result.put(String.valueOf(columnIndex+1), aValue);
+				result.put(columnNames.get(columnIndex+1), aValue);
+				for(TableModelListener l : listener)
+				{
+					l.tableChanged(new TableModelEvent(this, rowIndex));
+				}
+			}
+			else
+				throw new RuntimeException("failed to update " + tableName);
+		}
 	}
 	
 	private Set<TableModelListener> listener = new HashSet<TableModelListener>();

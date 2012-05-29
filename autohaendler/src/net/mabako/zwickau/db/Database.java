@@ -3,6 +3,7 @@ package net.mabako.zwickau.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 
 import net.mabako.zwickau.autohaendler.Config;
@@ -14,7 +15,7 @@ import net.mabako.zwickau.autohaendler.Config;
  */
 public class Database
 {
-	HashMap<Prepared, String> openStatements = new HashMap<Prepared, String>( );
+	private HashMap<Prepared, String> openStatements = new HashMap<Prepared, String>( );
 	
 	/**
 	 * Unsere Verbindung zur Datenbank
@@ -125,7 +126,7 @@ public class Database
 	{
 		try
 		{
-			Prepared p = new Prepared(con.prepareStatement(sql));
+			Prepared p = new Prepared(con.prepareStatement(sql, sql.startsWith("INSERT INTO") ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS));
 			openStatements.put(p, sql);
 			return p;
 		}

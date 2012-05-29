@@ -126,6 +126,32 @@ public class Prepared
 	}
 	
 	/**
+	 * Führt eine INSERT-Abfrage aus und liefert die erste eingefügte ID zurück.
+	 * @param objects alle Objekte, die als Parameter (statt ?) übergeben werden sollen
+	 * @return die erste eingefügte ID, oder <code>null</code> bei Fehlern.
+	 */
+	public Integer executeInsert(Object... objects)
+	{
+		try
+		{
+			// Alle übergebenen Parameter einsetzen
+			for (int i = 0; i < objects.length; i++) {
+				statement.setObject(i+1, objects[i]);
+			}
+			
+			statement.executeUpdate();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			return resultSet.getInt(1);
+		}
+		catch (SQLException e)
+		{
+			// e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
 	 * Schließt das Statement.
 	 */
 	public void close()
