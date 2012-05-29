@@ -4,8 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+
+import static net.mabako.zwickau.autohaendler.G.db;
 
 /**
  * Vektor mit Ergebnissen, d.h. trivial - dient nur der Vereinfachung von Programmcode.
@@ -20,10 +23,19 @@ public class Results extends Vector<Result> implements TableModel
 	 * Vector mit allen Spaltennamen, von 1 bis [spaltenzahl]. <0> ist "undefined"
 	 */
 	private Vector<String> columnNames;
+	
+	/**
+	 * Name der passenden Tabelle
+	 */
+	private String tableName;
 
 	public Results(Vector<String> columnNames)
 	{
 		this.columnNames = columnNames;
+	}
+	
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	@Override
@@ -54,7 +66,8 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		return false;
+		// 0 = id
+		return columnIndex > 0;
 	}
 
 	@Override
@@ -66,7 +79,25 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
-		throw new UnsupportedOperationException();
+		System.out.println(rowIndex + " " + columnIndex);
+		if(tableName == null)
+			throw new IllegalStateException("no tableName given");
+		
+		Prepared update = db.prepare("UPDATE " + tableName + " SET " + getColumnName(columnIndex) + " = ? WHERE " + getColumnName(0) + " = ?");
+		boolean success = update.executeNoResult(aValue, getValueAt(rowIndex, 0));
+		update.close();
+		
+		if(success)
+		{
+			get(rowIndex).put(String.valueOf(columnIndex+1), aValue);
+			get(rowIndex).put(getColumnName(columnIndex), aValue);
+			for(TableModelListener l : listener)
+			{
+				l.tableChanged(new TableModelEvent(this, rowIndex));
+			}
+		}
+		else
+			throw new RuntimeException("failed to update " + tableName);
 	}
 	
 	private Set<TableModelListener> listener = new HashSet<TableModelListener>();

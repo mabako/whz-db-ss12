@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import net.mabako.zwickau.db.Prepared;
+import net.mabako.zwickau.db.Results;
 
 import static net.mabako.zwickau.autohaendler.G.db;
 import net.miginfocom.swing.MigLayout;
@@ -30,9 +31,12 @@ public class TableView extends JPanel
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0,grow");
 		
-		Prepared p = db.prepare("SELECT * FROM " + tableName);
 		table = new JTable();
-		table.setModel(p.executeWithResult());
+		
+		Prepared p = db.prepare("SELECT * FROM " + tableName);
+		Results model = p.executeWithResult();
+		model.setTableName(tableName);
+		table.setModel(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		p.close();
 		
