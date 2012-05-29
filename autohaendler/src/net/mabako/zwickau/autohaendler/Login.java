@@ -127,6 +127,30 @@ public class Login extends JPanel
 		String username = p.executeWithSingleResult().getString("username");
 		main.setLoggedInAs(username);
 		p.close();
+
+		new Thread()
+		{
+			public void run()
+			{
+				Dashboard dashboard = new Dashboard();
+				
+				// Wir müssen sicherstellen, dass das Login-Fenster angezeigt wird.
+				// Da die Methode bei Windows-Authentifizierung im Konstruktor aufgerufen wird,
+				// wird sonst das Login-Fenster angezeigt (überschreibt dieses hier)
+				while(!(main.getHomeWindow() == Login.this))
+				{
+					try
+					{
+						Thread.sleep(50);
+					}
+					catch (InterruptedException e)
+					{
+					}
+				}
+				
+				main.setHomeWindow(dashboard);
+			}
+		}.start();
 	}
 
 	/**

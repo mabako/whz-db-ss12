@@ -11,6 +11,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Stack;
@@ -43,6 +45,11 @@ public class Main
 	 * @see Main#goUp()
 	 */
 	private Stack<JPanel> content = new Stack<JPanel>( );
+	
+	/**
+	 * Label für "Zurück".
+	 */
+	private JLabel lblZurueck;
 	
 	/**
 	 * Label, in dem steht, wer angemeldet ist.
@@ -112,17 +119,51 @@ public class Main
 		JPanel header = new JPanel();
 		header.setBackground(Color.WHITE);
 		frame.getContentPane().add(header, "cell 0 0,grow");
-		header.setLayout(new MigLayout("fill", "[]", "[][]"));
+		header.setLayout(new MigLayout("fill", "[][]", "[][]"));
+		
+		lblZurueck = new JLabel("Zurück");
+		lblZurueck.setForeground(Config.getSeparatorColor());
+		lblZurueck.setVisible(false);
+		lblZurueck.addMouseListener(new MouseListener()
+		{
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if(e.getButton() == MouseEvent.BUTTON1)
+					goUp();
+			}
+		});
+		header.add(lblZurueck, "cell 0 0,alignx left,aligny top");
 		
 		lblLoggedInAs = new JLabel("");
 		lblLoggedInAs.setForeground(Config.getSeparatorColor());
 		setLoggedInAs(null);
-		header.add(lblLoggedInAs, "cell 0 0,alignx right,aligny top");
+		header.add(lblLoggedInAs, "cell 1 0,alignx right,aligny top");
 		
 		JLabel lblAutohaus = new JLabel(Config.getAppName());
 		lblAutohaus.setForeground(Config.getSeparatorColor());
 		lblAutohaus.setFont(new Font(lblAutohaus.getFont().getFontName(), lblAutohaus.getFont().getStyle(), 32));
-		header.add(lblAutohaus, "cell 0 1,alignx center,aligny bottom");
+		header.add(lblAutohaus, "cell 0 1 2 1,alignx center,aligny bottom");
 		
 		frame.addWindowListener(new WindowListener()
 		{
@@ -176,6 +217,15 @@ public class Main
 	}
 	
 	/**
+	 * Gibt das Hauptfenster zurück.
+	 * @return
+	 */
+	public JPanel getHomeWindow()
+	{
+		return content.get(0);
+	}
+
+	/**
 	 * Setzt das Hauptfenster innerhalb der Navigation.
 	 * @param newContent
 	 */
@@ -212,6 +262,8 @@ public class Main
 	private void displayContent()
 	{
 		frame.getContentPane().add(content.lastElement(), "cell 0 1,grow");
+		
+		lblZurueck.setVisible(content.size() > 1);
 	}
 	
 	/**
@@ -236,6 +288,7 @@ public class Main
 	{
 		if(content.size() > 1)
 		{
+			content.lastElement().setVisible(false);
 			frame.getContentPane().remove(content.pop());
 			displayContent();
 		}

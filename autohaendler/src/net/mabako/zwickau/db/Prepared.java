@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import static net.mabako.zwickau.autohaendler.G.db;
 
@@ -67,8 +68,15 @@ public class Prepared
 			resultSet = statement.executeQuery();
 			ResultSetMetaData metadata = resultSet.getMetaData();
 			
+			// Liste mit Spaltennamen erzeugen
+			Vector<String> columnNames = new Vector<String>();
+			columnNames.add("undefined");
+			for(int i = 1; i <= metadata.getColumnCount(); ++i) {
+				columnNames.add(metadata.getColumnName(i));
+			}
+			
 			// Ergebnisliste vorbereiten
-			Results results = new Results();
+			Results results = new Results(columnNames);
 			while(resultSet.next())
 			{
 				// Alle Ergebnisse durchlaufen
