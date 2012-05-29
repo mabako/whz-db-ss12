@@ -41,7 +41,7 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public int getRowCount()
 	{
-		return size();
+		return size() + 1;
 	}
 
 	@Override
@@ -49,20 +49,28 @@ public class Results extends Vector<Result> implements TableModel
 	{
 		return columnNames.size() - 1;
 	}
-
+	
 	@Override
 	public String getColumnName(int columnIndex)
 	{
-		return columnNames.get(columnIndex+1);
+		String str = columnNames.get(columnIndex+1).replace("_id", "");
+		if(str.length() == 2)
+			return str.toUpperCase();
+		
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
-		if(getRowCount() == 0)
+		try
+		{
+			return getValueAt(0, columnIndex).getClass();
+		}
+		catch(Exception e)
+		{
 			return String.class;
-		
-		return getValueAt(0, columnIndex).getClass();
+		}
 	}
 
 	@Override
@@ -75,17 +83,23 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{
-		return get(rowIndex).get(String.valueOf(columnIndex+1));
+		try
+		{
+			return get(rowIndex).get(String.valueOf(columnIndex+1));
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
-		System.out.println(rowIndex + " " + columnIndex);
 		if(tableName == null)
 			throw new IllegalStateException("no tableName given");
 		
-		Prepared update = db.prepare("UPDATE " + tableName + " SET " + getColumnName(columnIndex) + " = ? WHERE " + getColumnName(0) + " = ?");
+		Prepared update = db.prepare("UPDATE " + tableName + " SET " + columnNames.get(columnIndex+1) + " = ? WHERE " + columnNames.get(1) + " = ?");
 		boolean success = update.executeNoResult(aValue, getValueAt(rowIndex, 0));
 		update.close();
 		

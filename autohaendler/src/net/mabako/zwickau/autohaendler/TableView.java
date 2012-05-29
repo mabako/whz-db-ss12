@@ -92,7 +92,7 @@ public class TableView extends JPanel
 		 */
 		@Override
 		public TableCellRenderer getCellRenderer(int row, int column) {
-			TableCellRenderer renderer = renderers.get(getModel().getColumnName(column));
+			TableCellRenderer renderer = renderers.get(getModel().getColumnName(column).toLowerCase());
 			if(renderer != null)
 				return renderer;
 			
