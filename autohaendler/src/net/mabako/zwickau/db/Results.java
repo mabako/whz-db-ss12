@@ -59,8 +59,10 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
-		// TODO: richtige Datentypen nutzen
-		return String.class;
+		if(getRowCount() == 0)
+			return String.class;
+		
+		return getValueAt(0, columnIndex).getClass();
 	}
 
 	@Override
