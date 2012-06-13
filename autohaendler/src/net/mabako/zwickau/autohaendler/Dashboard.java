@@ -19,7 +19,7 @@ public class Dashboard extends JPanel
 	 * Erstellt das Dashboard.
 	 */
 	public Dashboard() {
-		setLayout(new MigLayout("", "[20%:20%:20%][grow][20%:20%:20%]", "[][][][][]"));
+		setLayout(new MigLayout("", "[20%:20%:20%][grow][grow][20%:20%:20%]", "[][][][][]"));
 		
 		JButton lblBestand = new JButton("Bestand");
 		lblBestand.addActionListener(new ActionListener() {
@@ -27,7 +27,7 @@ public class Dashboard extends JPanel
 				main.addContent(new TableView(TableDetails.AUTOS));
 			}
 		});
-		add(lblBestand, "cell 1 1");
+		add(lblBestand, "cell 1 1,growx");
 		
 		JButton lblKunden = new JButton("Kunden");
 		lblKunden.addActionListener(new ActionListener() {
@@ -35,7 +35,7 @@ public class Dashboard extends JPanel
 				main.addContent(new TableView(TableDetails.KUNDEN));
 			}
 		});
-		add(lblKunden, "cell 1 2");
+		add(lblKunden, "cell 1 2,growx");
 		
 		JButton lblBestellungen = new JButton("Bestellungen");
 		lblBestellungen.addActionListener(new ActionListener() {
@@ -43,7 +43,7 @@ public class Dashboard extends JPanel
 				main.addContent(new TableView(TableDetails.BESTELLUNGEN));
 			}
 		});
-		add(lblBestellungen, "cell 1 3");
+		add(lblBestellungen, "cell 1 3,growx");
 		
 		JButton lblHersteller = new JButton("Hersteller");
 		lblHersteller.addActionListener(new ActionListener() {
@@ -51,7 +51,23 @@ public class Dashboard extends JPanel
 				main.addContent(new TableView(TableDetails.HERSTELLER));
 			}
 		});
-		add(lblHersteller, "cell 1 4");
+		add(lblHersteller, "cell 2 1,growx");
+		
+		JButton lblFarben = new JButton("Farben");
+		lblFarben.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				main.addContent(new TableView(TableDetails.FARBE));
+			}
+		});
+		add(lblFarben, "cell 2 2,growx");
+		
+		JButton lblZahlungsarten = new JButton("Zahlungsarten");
+		lblZahlungsarten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				main.addContent(new TableView(TableDetails.ZAHLUNGSART));
+			}
+		});
+		add(lblZahlungsarten, "cell 2 3,growx");
 		
 	}
 }
