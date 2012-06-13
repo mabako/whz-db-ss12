@@ -13,7 +13,8 @@ Datenbankanwendung
 * Gestaltung einer sinnvollen Oberfläche
 * Soll auch für einfache Büroangestellte nutzbar sein
 * Verwaltung aller Daten der Datenbank, d.h. eine Möglichkeit zum Einfügen, Ändern und Löschen aller Daten
-* Ausgabe und Druck eines Berichts
+* Ausgabe und Druck eines Berichts = Ausdrucken einer Tabelle, kein gesondertes Formular
+* Suchfunktion
 * Benutzerkonten:
   * Nutzergruppe mit Leserechten
   * Nutzergruppe mit Lese-, Schreib- und Einfüge-Rechten
