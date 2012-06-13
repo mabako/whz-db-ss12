@@ -24,7 +24,7 @@ public class Dashboard extends JPanel
 		JButton lblBestand = new JButton("Bestand");
 		lblBestand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView("autos"));
+				main.addContent(new TableView(TableDetails.AUTOS));
 			}
 		});
 		add(lblBestand, "cell 1 1");
@@ -32,7 +32,7 @@ public class Dashboard extends JPanel
 		JButton lblKunden = new JButton("Kunden");
 		lblKunden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView("kunde"));
+				main.addContent(new TableView(TableDetails.KUNDEN));
 			}
 		});
 		add(lblKunden, "cell 1 2");
@@ -40,7 +40,7 @@ public class Dashboard extends JPanel
 		JButton lblBestellungen = new JButton("Bestellungen");
 		lblBestellungen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView("bestellungen"));
+				main.addContent(new TableView(TableDetails.BESTELLUNGEN));
 			}
 		});
 		add(lblBestellungen, "cell 1 3");
@@ -48,7 +48,7 @@ public class Dashboard extends JPanel
 		JButton lblHersteller = new JButton("Hersteller");
 		lblHersteller.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView("hersteller"));
+				main.addContent(new TableView(TableDetails.HERSTELLER));
 			}
 		});
 		add(lblHersteller, "cell 1 4");

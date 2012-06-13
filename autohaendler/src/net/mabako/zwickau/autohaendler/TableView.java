@@ -1,6 +1,8 @@
 package net.mabako.zwickau.autohaendler;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.DefaultCellEditor;
@@ -18,6 +20,7 @@ import net.mabako.zwickau.db.Results;
 
 import static net.mabako.zwickau.autohaendler.G.db;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JButton;
 
 public class TableView extends JPanel
 {
@@ -33,23 +36,42 @@ public class TableView extends JPanel
 	
 	/**
 	 * Erstellt eine neue Tabellenansicht
-	 * @param tableName Name der entsprechenden Datenbanktabelle
+	 * @param details Name der entsprechenden Datenbanktabelle
 	 */
-	public TableView(String tableName) {
-		setLayout(new MigLayout("", "[grow]", "[grow]"));
+	public TableView(TableDetails details) {
+		setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0,grow");
 		
 		
-		Prepared p = db.prepare("SELECT * FROM " + tableName);
+		Prepared p = db.prepare("SELECT * FROM " + details.toString().toLowerCase());
 		Results model = p.executeWithResult();
-		model.setTableName(tableName);
+		model.setTableName(details.toString().toLowerCase());
 		table = new JCustomTable(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		p.close();
 		
 		scrollPane.setViewportView(table);
+		
+		JButton btnAusgewhlteLschen = new JButton("Ausgewählte Löschen");
+		btnAusgewhlteLschen.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				int[] rows = table.getSelectedRows();
+
+				Results results = (Results) table.getModel();
+				for(int i = rows.length-1; i >= 0; -- i)
+				{
+					int row = rows[i];
+					results.removeRow(row);
+				}
+				table.setModel(results);
+			}
+		});
+		add(btnAusgewhlteLschen, "cell 0 1,alignx right");
 	}
 	
 	private class JCustomTable extends JTable {

@@ -209,4 +209,22 @@ public class Results extends Vector<Result> implements TableModel
 	{
 		listener.remove(l);
 	}
+
+	public void removeRow(int row)
+	{
+		Integer id = (Integer) getValueAt(row, 0);
+		if(id != null)
+		{
+			Prepared p = db.prepare("DELETE FROM " + tableName + " WHERE id = ?");
+			boolean success = p.executeNoResult(id);
+			p.close();
+			
+			if(!success)
+				return;
+		}
+		remove(row);
+		
+		for(TableModelListener l : listener)
+			l.tableChanged(new TableModelEvent(this, row, row, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE));
+	}
 }
