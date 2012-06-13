@@ -192,7 +192,10 @@ public class Main
 			public void windowClosing(WindowEvent e)
 			{
 				if(db != null)
+				{
 					db.disconnect();
+					db = null;
+				}
 			}
 			
 			@Override
