@@ -3,6 +3,7 @@ package net.mabako.zwickau.autohaendler;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.util.HashMap;
 
 import javax.swing.DefaultCellEditor;
@@ -32,17 +33,17 @@ public class TableView extends JPanel
 	/**
 	 * Die Tabelle, in welcher die Daten dargestellt werden
 	 */
-	private JTable table;
+	protected JTable table;
 	
 	/**
 	 * Erstellt eine neue Tabellenansicht
 	 * @param details Name der entsprechenden Datenbanktabelle
 	 */
 	public TableView(TableDetails details) {
-		setLayout(new MigLayout("", "[grow]", "[grow][]"));
+		setLayout(new MigLayout("", "[][grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, "cell 0 0,grow");
+		add(scrollPane, "cell 0 0 2 1,grow");
 		
 		
 		Prepared p = db.prepare("SELECT * FROM " + details.toString().toLowerCase());
@@ -71,7 +72,23 @@ public class TableView extends JPanel
 				table.setModel(results);
 			}
 		});
-		add(btnAusgewhlteLschen, "cell 0 1,alignx right");
+		
+		JButton btnDrucken = new JButton("Drucken");
+		btnDrucken.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+					table.print();
+				} catch (PrinterException e1) {
+					
+				}
+			}
+		});
+		
+		add(btnDrucken, "cell 0 1,alignx right");
+		add(btnAusgewhlteLschen, "cell 1 1,alignx right");
 	}
 	
 	private class JCustomTable extends JTable {
