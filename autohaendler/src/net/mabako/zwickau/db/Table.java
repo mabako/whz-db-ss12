@@ -26,8 +26,14 @@ public enum Table
 	 */
 	public Results fetchAll()
 	{
-		Prepared p = handler.fetchAll();
-		Results results = p.executeWithResult();
+		return fetchAll(null);
+	}
+
+
+	public Results fetchAll(String where, Object... objects)
+	{
+		Prepared p = handler.fetchAll(where);
+		Results results = p.executeWithResult(objects);
 		p.close();
 		
 		results.setTableDetails(this);

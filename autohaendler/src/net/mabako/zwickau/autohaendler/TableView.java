@@ -21,6 +21,8 @@ import net.mabako.zwickau.db.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 
+import static net.mabako.zwickau.autohaendler.G.main;
+
 public class TableView extends JPanel
 {
 	/**
@@ -38,12 +40,17 @@ public class TableView extends JPanel
 	 * @param details Name der entsprechenden Datenbanktabelle
 	 */
 	public TableView(Table details) {
+		this(details, details.fetchAll());
+	}
+	
+	public TableView(Table details, Results model)
+	{
 		setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0,grow");
 		
-		table = new JCustomTable(details.fetchAll());
+		table = new JCustomTable(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		
 		scrollPane.setViewportView(table);
@@ -66,6 +73,25 @@ public class TableView extends JPanel
 			}
 		});
 		add(btnAusgewhlteLschen, "cell 0 1,alignx right");
+		
+		if(details == Table.KUNDE)
+		{
+			JButton btnBestellungen = new JButton("Bestellungen Anzeigen");
+			btnBestellungen.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					int row = table.getSelectedRow();
+					if(row >= 0)
+					{
+						Result result = ((Results) table.getModel()).get(row);
+						main.addContent(new TableView(Table.BESTELLUNGEN, Table.BESTELLUNGEN.fetchAll("kunde_id = ?", result.getInt("id"))));
+					}
+				}
+			});
+			add(btnBestellungen, "cell 0 1, alignx right");
+		}
 	}
 	
 	private class JCustomTable extends JTable {

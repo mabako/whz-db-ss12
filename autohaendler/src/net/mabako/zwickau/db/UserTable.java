@@ -10,8 +10,10 @@ public class UserTable extends TableHandler
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Prepared fetchAll()
+	public Prepared fetchAll(String where)
 	{
+		if(where != null)
+			throw new RuntimeException("Where not supported: " + where);
 		return db.prepare("SELECT memberuid AS id, USER_NAME(memberuid) AS name, '*' AS passwort, groupuid AS rechte_id FROM sys.sysmembers");
 	}
 

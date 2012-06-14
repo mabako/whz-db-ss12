@@ -18,9 +18,11 @@ public abstract class TableHandler
 	
 	/**
 	 * Gibt ein Prepared Statement für alle Datensätze zurück
+	 * @param objects 
+	 * @param where 
 	 * @return
 	 */
-	abstract Prepared fetchAll();
+	abstract Prepared fetchAll(String where);
 
 	/**
 	 * Liefert die Inhalte einer verwandten Tabelle zurück

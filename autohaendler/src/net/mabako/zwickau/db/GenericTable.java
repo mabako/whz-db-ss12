@@ -13,9 +13,9 @@ public class GenericTable extends TableHandler
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Prepared fetchAll()
+	public Prepared fetchAll(String where)
 	{
-		return db.prepare("SELECT * FROM " + getTableName());
+		return db.prepare("SELECT * FROM " + getTableName() + ( where != null ? (" WHERE " + where ) : ""));
 	}
 
 	/**
