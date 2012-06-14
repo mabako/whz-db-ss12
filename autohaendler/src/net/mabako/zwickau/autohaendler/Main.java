@@ -121,7 +121,7 @@ public class Main
 		frame.getContentPane().add(header, "cell 0 0,grow");
 		header.setLayout(new MigLayout("fill", "[][]", "[][]"));
 		
-		lblZurueck = new JLabel("Zurück");
+		lblZurueck = new JLabel("<html><strong>Zurück</strong></html>");
 		lblZurueck.setForeground(Config.getSeparatorColor());
 		lblZurueck.setVisible(false);
 		lblZurueck.addMouseListener(new MouseListener()
