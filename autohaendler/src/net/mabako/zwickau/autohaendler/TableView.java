@@ -3,6 +3,7 @@ package net.mabako.zwickau.autohaendler;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.util.HashMap;
 
 import javax.swing.DefaultCellEditor;
@@ -33,7 +34,7 @@ public class TableView extends JPanel
 	/**
 	 * Die Tabelle, in welcher die Daten dargestellt werden
 	 */
-	private JTable table;
+	protected JTable table;
 	
 	/**
 	 * Erstellt eine neue Tabellenansicht
@@ -48,7 +49,7 @@ public class TableView extends JPanel
 		setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, "cell 0 0,grow");
+		add(scrollPane, "cell 0 0 2 1,grow");
 		
 		table = new JCustomTable(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -72,7 +73,23 @@ public class TableView extends JPanel
 				table.setModel(results);
 			}
 		});
-		add(btnAusgewhlteLschen, "cell 0 1,alignx right");
+		add(btnAusgewhlteLschen, "cell 1 1,alignx right");
+		
+		JButton btnDrucken = new JButton("Drucken");
+		btnDrucken.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				try {
+					table.print();
+				} catch (PrinterException e1) {
+					
+				}
+			}
+		});
+		
+		add(btnDrucken, "cell 0 1,alignx right");
 		
 		if(details == Table.KUNDE)
 		{
