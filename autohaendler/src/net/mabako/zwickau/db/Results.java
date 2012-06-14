@@ -1,6 +1,5 @@
 package net.mabako.zwickau.db;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
@@ -10,10 +9,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import net.mabako.zwickau.autohaendler.Config;
 import net.mabako.zwickau.autohaendler.TableViewLink;
-
-import static net.mabako.zwickau.autohaendler.G.db;
 
 /**
  * Vektor mit Ergebnissen, d.h. trivial - dient nur der Vereinfachung von Programmcode.
@@ -29,18 +25,20 @@ public class Results extends Vector<Result> implements TableModel
 	 */
 	private Vector<String> columnNames;
 	
+	private Table details;
+	
 	/**
-	 * Name der passenden Tabelle
+	 * 
+	 * @param columnNames
 	 */
-	private String tableName;
-
 	public Results(Vector<String> columnNames)
 	{
 		this.columnNames = columnNames;
 	}
 	
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setTableDetails(Table details)
+	{
+		this.details = details;
 	}
 
 	/**
@@ -89,8 +87,7 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		// 0 = id
-		return columnIndex > 0;
+		return details.isColumnEditable(rowIndex < size() ? get(rowIndex) : null, getColumnName(columnIndex).toLowerCase());
 	}
 
 	@Override
@@ -109,15 +106,15 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
-		if(tableName == null)
-			throw new IllegalStateException("no tableName given");
+		if(details == null)
+			throw new IllegalStateException("no details given");
 		
 		if(aValue instanceof TableViewLink)
 			aValue = ((TableViewLink)aValue).getID();
 		
 		// Neuer Datensatz -> keine ID -> kein Update
 		Result result = rowIndex < size() ? get(rowIndex) : null;
-		if(result == null || result.getInt("1") == null)
+		if(result == null || result.get("1") == null)
 		{
 			if(result == null)
 			{
@@ -129,47 +126,25 @@ public class Results extends Vector<Result> implements TableModel
 			result.put(columnNames.get(columnIndex+1), aValue);
 			
 			// Jetzt versuchen wir, einen neuen Datensatz mit allen bisher eingegebenen Parametern zu erzeugen
-			Prepared checkAllowsNull = db.prepare("SELECT COUNT(*) AS count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_CATALOG = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? AND IS_NULLABLE = 'YES'");
 			try
 			{
-				ArrayList<Object> params = new ArrayList<>();
-				
-				String fields = ""; // Feldnamen
-				String paramsQuery = ""; // Query-Parameter, in etwa ?,?,?,?,?
 				for(int i = 1; i < columnNames.size(); ++ i)
 				{
 					String columnName = columnNames.get(i);
-					if(result.get(columnName) != null)
-					{
-						fields += "," + columnName;
-						paramsQuery += ",?";
-						params.add(result.get(columnName));
-					}
-					else
-					{
-						if(!"id".equalsIgnoreCase(columnName) && checkAllowsNull.executeWithSingleResult(Config.getDatabaseName(), tableName, columnName).getInt("count") == 0)
-							throw new Exception(columnName + " doesn't allow null");
-					}
+					if(result.get(columnName) == null && !details.fieldAllowsNull(columnName))
+						throw new Exception(columnName + " doesn't allow null");
 				}
 				
 				// INSERT ausführen
-				Prepared insert = db.prepare("INSERT INTO " + tableName + " (" + fields.substring(1) + ") VALUES (" + paramsQuery.substring(1) + ")");
-				
-				Integer id = insert.executeInsert(params.toArray());
-				insert.close();
-				
-				if(id != null)
-				{
-					// Kompletten Datensatz abfragen, um auch Standardwerte zu definieren.
-					Prepared p = db.prepare("SELECT * FROM " + tableName + " WHERE id = ?");
-					set(rowIndex, p.executeWithSingleResult(id));
-					p.close();
-				}
+				set(rowIndex, details.insert(columnNames, result));
+			}
+			catch(RuntimeException e)
+			{
+				e.printStackTrace();
 			}
 			catch(Exception e)
 			{
 			}
-			checkAllowsNull.close();
 			
 			for(TableModelListener l : listener)
 			{
@@ -178,11 +153,7 @@ public class Results extends Vector<Result> implements TableModel
 		}
 		else
 		{
-			Prepared update = db.prepare("UPDATE " + tableName + " SET " + columnNames.get(columnIndex+1) + " = ? WHERE " + columnNames.get(1) + " = ?");
-			boolean success = update.executeNoResult(aValue, getValueAt(rowIndex, 0));
-			update.close();
-			
-			if(success)
+			if(details.update(result, columnNames.get(columnIndex+1), aValue))
 			{
 				result.put(String.valueOf(columnIndex+1), aValue);
 				result.put(columnNames.get(columnIndex+1), aValue);
@@ -192,7 +163,7 @@ public class Results extends Vector<Result> implements TableModel
 				}
 			}
 			else
-				throw new RuntimeException("failed to update " + tableName);
+				throw new RuntimeException("failed to update " + details.toString().toLowerCase());
 		}
 	}
 	
@@ -212,19 +183,20 @@ public class Results extends Vector<Result> implements TableModel
 
 	public void removeRow(int row)
 	{
-		Integer id = (Integer) getValueAt(row, 0);
-		if(id != null)
+		Result result = row < size() ? get(row) : null;
+		if(result != null)
 		{
-			Prepared p = db.prepare("DELETE FROM " + tableName + " WHERE id = ?");
-			boolean success = p.executeNoResult(id);
-			p.close();
-			
-			if(!success)
-				return;
+			if(!details.remove(result))
+				throw new RuntimeException("can't delete row");
 		}
-		remove(row);
 		
+		remove(row);
 		for(TableModelListener l : listener)
 			l.tableChanged(new TableModelEvent(this, row, row, TableModelEvent.ALL_COLUMNS, TableModelEvent.DELETE));
+	}
+	
+	public Results fetchAssociated(String columnName)
+	{
+		return details.fetchAssociated(columnName);
 	}
 }

@@ -14,11 +14,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import net.mabako.zwickau.db.Prepared;
 import net.mabako.zwickau.db.Result;
 import net.mabako.zwickau.db.Results;
+import net.mabako.zwickau.db.Table;
 
-import static net.mabako.zwickau.autohaendler.G.db;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 
@@ -38,19 +37,14 @@ public class TableView extends JPanel
 	 * Erstellt eine neue Tabellenansicht
 	 * @param details Name der entsprechenden Datenbanktabelle
 	 */
-	public TableView(TableDetails details) {
+	public TableView(Table details) {
 		setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0,grow");
 		
-		
-		Prepared p = db.prepare("SELECT * FROM " + details.toString().toLowerCase());
-		Results model = p.executeWithResult();
-		model.setTableName(details.toString().toLowerCase());
-		table = new JCustomTable(model);
+		table = new JCustomTable(details.fetchAll());
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		p.close();
 		
 		scrollPane.setViewportView(table);
 		
@@ -131,8 +125,7 @@ public class TableView extends JPanel
 					final HashMap<String, String> values = new HashMap<>();
 					
 					// Alle verlinkten Inhalte abfragen
-					Prepared p = db.prepare("SELECT * FROM " + model.getColumnName(columnIndex));
-					for(Result result : p.executeWithResult())
+					for(Result result : ((Results)model).fetchAssociated(model.getColumnName(columnIndex)))
 					{
 						// Zuordnung speichern
 						values.put(result.getInt("id").toString(), result.getString("name"));
@@ -140,7 +133,6 @@ public class TableView extends JPanel
 						// Ein Item in die Kombobox einfügen
 						box.addItem(new TableViewLink(result.getInt("id"), result.getString("name")));
 					}
-					p.close();
 					
 					// Editor, d.h. beim Bearbeiten wird die Kombobox angezeigt
 					getColumnModel().getColumn(columnIndex).setCellEditor(new DefaultCellEditor(box));

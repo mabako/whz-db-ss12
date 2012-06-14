@@ -2,6 +2,8 @@ package net.mabako.zwickau.autohaendler;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import net.mabako.zwickau.db.Table;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -24,7 +26,7 @@ public class Dashboard extends JPanel
 		JButton lblBestand = new JButton("Bestand");
 		lblBestand.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.AUTOS));
+				main.addContent(new TableView(Table.AUTOS));
 			}
 		});
 		add(lblBestand, "cell 1 1,growx");
@@ -32,7 +34,7 @@ public class Dashboard extends JPanel
 		JButton lblKunden = new JButton("Kunden");
 		lblKunden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.KUNDEN));
+				main.addContent(new TableView(Table.KUNDEN));
 			}
 		});
 		add(lblKunden, "cell 1 2,growx");
@@ -40,7 +42,7 @@ public class Dashboard extends JPanel
 		JButton lblBestellungen = new JButton("Bestellungen");
 		lblBestellungen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.BESTELLUNGEN));
+				main.addContent(new TableView(Table.BESTELLUNGEN));
 			}
 		});
 		add(lblBestellungen, "cell 1 3,growx");
@@ -48,7 +50,7 @@ public class Dashboard extends JPanel
 		JButton lblHersteller = new JButton("Hersteller");
 		lblHersteller.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.HERSTELLER));
+				main.addContent(new TableView(Table.HERSTELLER));
 			}
 		});
 		add(lblHersteller, "cell 2 1,growx");
@@ -56,7 +58,7 @@ public class Dashboard extends JPanel
 		JButton lblFarben = new JButton("Farben");
 		lblFarben.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.FARBE));
+				main.addContent(new TableView(Table.FARBE));
 			}
 		});
 		add(lblFarben, "cell 2 2,growx");
@@ -64,10 +66,17 @@ public class Dashboard extends JPanel
 		JButton lblZahlungsarten = new JButton("Zahlungsarten");
 		lblZahlungsarten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(TableDetails.ZAHLUNGSART));
+				main.addContent(new TableView(Table.ZAHLUNGSART));
 			}
 		});
 		add(lblZahlungsarten, "cell 2 3,growx");
 		
+		JButton lblBenutzer = new JButton("Benutzer");
+		lblBenutzer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				main.addContent(new TableView(Table.BENUTZER));
+			}
+		});
+		add(lblBenutzer, "cell 2 4,growx");
 	}
 }
