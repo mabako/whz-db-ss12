@@ -107,4 +107,17 @@ public class PostenTable extends TableHandler
 		
 		return success;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasPermissionTo(String what)
+	{
+		Prepared prepared = db.prepare("SELECT COUNT(*) AS count FROM sys.fn_my_permissions(?, 'OBJECT') WHERE subentity_name = '' AND permission_name = ?");
+		Result result = prepared.executeWithSingleResult(getTableName(), what);
+		prepared.close();
+		
+		return result.getInt("count") > 0;
+	}
 }

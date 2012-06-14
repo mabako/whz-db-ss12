@@ -208,4 +208,14 @@ public class UserTable extends TableHandler
 		
 		return true;
 	}
+
+	@Override
+	public boolean hasPermissionTo(String what)
+	{
+		Prepared prepared = db.prepare("SELECT COUNT(*) AS count FROM sys.fn_my_permissions(NULL, 'DATABASE') WHERE subentity_name = '' AND permission_name = 'ALTER ANY USER'");
+		Result result = prepared.executeWithSingleResult();
+		prepared.close();
+		
+		return result.getInt("count") > 0;
+	}
 }

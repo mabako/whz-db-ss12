@@ -23,60 +23,27 @@ public class Dashboard extends JPanel
 	public Dashboard() {
 		setLayout(new MigLayout("", "[20%:20%:20%][grow][grow][20%:20%:20%]", "[][][][][]"));
 		
-		JButton lblBestand = new JButton("Bestand");
-		lblBestand.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.AUTO));
-			}
-		});
-		add(lblBestand, "cell 1 1,growx");
+		createButton("Bestand", Table.AUTO, 1, 1);
+		createButton("Kunden", Table.KUNDE, 1, 2);
+		createButton("Bestellungen", Table.BESTELLUNG, 1, 3);
 		
-		JButton lblKunden = new JButton("Kunden");
-		lblKunden.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.KUNDE));
-			}
-		});
-		add(lblKunden, "cell 1 2,growx");
-		
-		JButton lblBestellungen = new JButton("Bestellungen");
-		lblBestellungen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.BESTELLUNG));
-			}
-		});
-		add(lblBestellungen, "cell 1 3,growx");
-		
-		JButton lblHersteller = new JButton("Hersteller");
-		lblHersteller.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.HERSTELLER));
-			}
-		});
-		add(lblHersteller, "cell 2 1,growx");
-		
-		JButton lblFarben = new JButton("Farben");
-		lblFarben.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.FARBE));
-			}
-		});
-		add(lblFarben, "cell 2 2,growx");
-		
-		JButton lblZahlungsarten = new JButton("Zahlungsarten");
-		lblZahlungsarten.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.ZAHLUNGSART));
-			}
-		});
-		add(lblZahlungsarten, "cell 2 3,growx");
-		
-		JButton lblBenutzer = new JButton("Benutzer");
-		lblBenutzer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.BENUTZER));
-			}
-		});
-		add(lblBenutzer, "cell 2 4,growx");
+		createButton("Hersteller", Table.HERSTELLER, 2, 1);
+		createButton("Farben", Table.FARBE, 2, 2);
+		createButton("Zahlungsarten", Table.ZAHLUNGSART, 2, 3);
+		createButton("Benutzer", Table.BENUTZER, 2, 4);
+	}
+
+	private void createButton(String label, final Table table, int x, int y)
+	{
+		if(table.hasPermissionTo("SELECT"))
+		{
+			JButton button = new JButton(label);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					main.addContent(new TableView(table));
+				}
+			});
+			add(button, "cell " + x + " " + y + " ,growx");
+		}
 	}
 }

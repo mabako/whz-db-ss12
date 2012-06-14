@@ -49,7 +49,7 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public int getRowCount()
 	{
-		return size() + 1;
+		return size() + (details.hasPermissionTo("INSERT") ? 1 : 0);
 	}
 
 	@Override
@@ -87,6 +87,8 @@ public class Results extends Vector<Result> implements TableModel
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
+		if(!details.hasPermissionTo("UPDATE"))
+			return false;
 		return details.isColumnEditable(rowIndex < size() ? get(rowIndex) : null, getColumnName(columnIndex).toLowerCase());
 	}
 

@@ -70,4 +70,11 @@ public abstract class TableHandler
 	 * @return
 	 */
 	abstract boolean remove(Result result);
+
+	/**
+	 * Überprüft, ob der Benutzer eine Berechtigung hat, z.b. für SELECT, UPDATE, INSERT, DELETE
+	 * @param what
+	 * @return
+	 */
+	abstract public boolean hasPermissionTo(String what);
 }

@@ -59,24 +59,27 @@ public class TableView extends JPanel
 		
 		scrollPane.setViewportView(table);
 		
-		JButton btnAusgewhlteLschen = new JButton("Ausgewählte Löschen");
-		btnAusgewhlteLschen.addActionListener(new ActionListener()
+		if(details.hasPermissionTo("DELETE"))
 		{
-			@Override
-			public void actionPerformed(ActionEvent e)
+			JButton btnAusgewhlteLschen = new JButton("Ausgewählte Löschen");
+			btnAusgewhlteLschen.addActionListener(new ActionListener()
 			{
-				int[] rows = table.getSelectedRows();
-
-				Results results = (Results) table.getModel();
-				for(int i = rows.length-1; i >= 0; -- i)
+				@Override
+				public void actionPerformed(ActionEvent e)
 				{
-					int row = rows[i];
-					results.removeRow(row);
+					int[] rows = table.getSelectedRows();
+	
+					Results results = (Results) table.getModel();
+					for(int i = rows.length-1; i >= 0; -- i)
+					{
+						int row = rows[i];
+						results.removeRow(row);
+					}
+					table.setModel(results);
 				}
-				table.setModel(results);
-			}
-		});
-		add(btnAusgewhlteLschen, "cell 1 1,alignx right");
+			});
+			add(btnAusgewhlteLschen, "cell 1 1,alignx right");
+		}
 		
 		JButton btnDrucken = new JButton("Drucken");
 		btnDrucken.addActionListener(new ActionListener()

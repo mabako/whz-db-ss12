@@ -80,4 +80,9 @@ public enum Table
 		
 		return !columnName.equalsIgnoreCase("id");
 	}
+
+	public boolean hasPermissionTo(String what)
+	{
+		return handler.hasPermissionTo(what);
+	}
 }
