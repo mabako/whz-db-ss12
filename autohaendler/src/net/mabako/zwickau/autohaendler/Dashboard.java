@@ -34,7 +34,7 @@ public class Dashboard extends JPanel
 		JButton lblKunden = new JButton("Kunden");
 		lblKunden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				main.addContent(new TableView(Table.KUNDEN));
+				main.addContent(new TableView(Table.KUNDE));
 			}
 		});
 		add(lblKunden, "cell 1 2,growx");

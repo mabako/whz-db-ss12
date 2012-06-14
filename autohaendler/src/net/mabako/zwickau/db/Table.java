@@ -5,7 +5,7 @@ import java.util.Vector;
 public enum Table
 {
 	AUTOS(new GenericTable()),
-	KUNDEN(new GenericTable()),
+	KUNDE(new GenericTable()),
 	BESTELLUNGEN(new GenericTable()),
 	HERSTELLER(new GenericTable()),
 	ZAHLUNGSART(new GenericTable()),
