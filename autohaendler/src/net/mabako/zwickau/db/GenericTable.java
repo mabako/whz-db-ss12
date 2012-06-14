@@ -13,7 +13,7 @@ public class GenericTable extends TableHandler
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Prepared fetchAll(String where)
+	public Prepared fetchAll(String where, Object... objects)
 	{
 		return db.prepare("SELECT * FROM " + getTableName() + ( where != null ? (" WHERE " + where ) : ""));
 	}
@@ -38,7 +38,6 @@ public class GenericTable extends TableHandler
 		checkAllowsNull.close();
 		
 		return allowed;
-
 	}
 
 	/**

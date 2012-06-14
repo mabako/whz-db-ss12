@@ -4,13 +4,14 @@ import java.util.Vector;
 
 public enum Table
 {
-	AUTOS(new GenericTable()),
+	AUTO(new GenericTable()),
 	KUNDE(new GenericTable()),
-	BESTELLUNGEN(new GenericTable()),
+	BESTELLUNG(new GenericTable()),
 	HERSTELLER(new GenericTable()),
 	ZAHLUNGSART(new GenericTable()),
 	FARBE(new GenericTable()),
-	BENUTZER(new UserTable());
+	BENUTZER(new UserTable()),
+	POSTEN(new PostenTable());
 	
 	private TableHandler handler;
 	
@@ -32,7 +33,7 @@ public enum Table
 
 	public Results fetchAll(String where, Object... objects)
 	{
-		Prepared p = handler.fetchAll(where);
+		Prepared p = handler.fetchAll(where, objects);
 		Results results = p.executeWithResult(objects);
 		p.close();
 		
@@ -42,7 +43,7 @@ public enum Table
 	
 	public Results fetchAssociated(String columnName)
 	{
-		Prepared p = handler.fetchAssociated(columnName);
+		Prepared p = handler.fetchAssociated(columnName.toLowerCase());
 		Results results = p.executeWithResult();
 		p.close();
 		

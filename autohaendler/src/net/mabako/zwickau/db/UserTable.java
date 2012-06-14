@@ -10,7 +10,7 @@ public class UserTable extends TableHandler
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Prepared fetchAll(String where)
+	public Prepared fetchAll(String where, Object... objects)
 	{
 		if(where != null)
 			throw new RuntimeException("Where not supported: " + where);

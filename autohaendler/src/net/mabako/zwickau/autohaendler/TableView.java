@@ -44,9 +44,12 @@ public class TableView extends JPanel
 		this(details, details.fetchAll());
 	}
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public TableView(Table details, Results model)
 	{
-		setLayout(new MigLayout("", "[grow]", "[grow][]"));
+		setLayout(new MigLayout("", "[][grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0 2 1,grow");
@@ -89,7 +92,7 @@ public class TableView extends JPanel
 			}
 		});
 		
-		add(btnDrucken, "cell 0 1,alignx right");
+		add(btnDrucken, "cell 0 1,alignx left");
 		
 		if(details == Table.KUNDE)
 		{
@@ -103,11 +106,30 @@ public class TableView extends JPanel
 					if(row >= 0)
 					{
 						Result result = ((Results) table.getModel()).get(row);
-						main.addContent(new TableView(Table.BESTELLUNGEN, Table.BESTELLUNGEN.fetchAll("kunde_id = ?", result.getInt("id"))));
+						main.addContent(new TableView(Table.BESTELLUNG, Table.BESTELLUNG.fetchAll("kunde_id = ?", result.getInt("id"))));
 					}
 				}
 			});
-			add(btnBestellungen, "cell 0 1, alignx right");
+			add(btnBestellungen, "cell 1 1, alignx right");
+		}
+		
+		if(details == Table.BESTELLUNG)
+		{
+			JButton btnAutos = new JButton("Autos anzeigen");
+			btnAutos.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					int row = table.getSelectedRow();
+					if(row >= 0)
+					{
+						Result result = ((Results) table.getModel()).get(row);
+						main.addContent(new TableView(Table.POSTEN, Table.POSTEN.fetchAll("bestellung_id = ?", result.getInt("id"))));
+					}
+				}
+			});
+			add(btnAutos, "cell 1 1, alignx right");
 		}
 	}
 	

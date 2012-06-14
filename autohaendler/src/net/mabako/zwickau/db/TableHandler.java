@@ -20,16 +20,17 @@ public abstract class TableHandler
 	 * Gibt ein Prepared Statement für alle Datensätze zurück
 	 * @param objects 
 	 * @param where 
+	 * @param objects 
 	 * @return
 	 */
-	abstract Prepared fetchAll(String where);
+	public abstract Prepared fetchAll(String where, Object... objects);
 
 	/**
 	 * Liefert die Inhalte einer verwandten Tabelle zurück
 	 * @param columnName
 	 * @return
 	 */
-	abstract Prepared fetchAssociated(String columnName);
+	public abstract Prepared fetchAssociated(String columnName);
 
 	/**
 	 * Kann das Feld bearbeitet werden?
@@ -37,14 +38,14 @@ public abstract class TableHandler
 	 * @param columnName
 	 * @return
 	 */
-	abstract boolean isFieldEditable(Result result, String columnName);
+	public abstract boolean isFieldEditable(Result result, String columnName);
 
 	/**
 	 * Darf in dem Feld null stehen?
 	 * @param columnName
 	 * @return
 	 */
-	abstract boolean fieldAllowsNull(String columnName);
+	public abstract boolean fieldAllowsNull(String columnName);
 
 	/**
 	 * Fügt einen Datensatz ein
@@ -52,7 +53,7 @@ public abstract class TableHandler
 	 * @param result
 	 * @return
 	 */
-	abstract Result insert(Vector<String> columnNames, Result result);
+	public abstract Result insert(Vector<String> columnNames, Result result);
 
 	/**
 	 * Aktualisiert einen Datensatz
@@ -61,7 +62,7 @@ public abstract class TableHandler
 	 * @param value
 	 * @return
 	 */
-	abstract boolean update(Result result, String column, Object value);
+	public abstract boolean update(Result result, String column, Object value);
 
 	/**
 	 * Entfernt einen Datensatz
