@@ -75,7 +75,8 @@ public class Results extends Vector<Result> implements TableModel
 		{
 			if(columnNames.get(columnIndex+1).endsWith("_id"))
 				return JComboBox.class;
-			
+			if(details == Table.BESTELLUNG && (columnNames.get(columnIndex+1).equalsIgnoreCase("ausgeliefert") || columnNames.get(columnIndex+1).equalsIgnoreCase("bezahlt")))
+				return Boolean.class;
 			return getValueAt(0, columnIndex).getClass();
 		}
 		catch(Exception e)
@@ -97,7 +98,10 @@ public class Results extends Vector<Result> implements TableModel
 	{
 		try
 		{
-			return get(rowIndex).get(String.valueOf(columnIndex+1));
+			Object o = get(rowIndex).get(String.valueOf(columnIndex+1));
+			if(details == Table.BESTELLUNG && (columnNames.get(columnIndex+1).equalsIgnoreCase("ausgeliefert") || columnNames.get(columnIndex+1).equalsIgnoreCase("bezahlt")))
+				return 1 == ((Integer) o);
+			return o;
 		}
 		catch(Exception e)
 		{
@@ -113,6 +117,8 @@ public class Results extends Vector<Result> implements TableModel
 		
 		if(aValue instanceof TableViewLink)
 			aValue = ((TableViewLink)aValue).getID();
+		else if(aValue instanceof Boolean)
+			aValue = (Boolean) aValue == Boolean.TRUE ? 1 : 0;
 		
 		// Neuer Datensatz -> keine ID -> kein Update
 		Result result = rowIndex < size() ? get(rowIndex) : null;
@@ -133,8 +139,14 @@ public class Results extends Vector<Result> implements TableModel
 				for(int i = 1; i < columnNames.size(); ++ i)
 				{
 					String columnName = columnNames.get(i);
-					if(result.get(columnName) == null && !details.fieldAllowsNull(columnName))
-						throw new Exception(columnName + " doesn't allow null");
+					if(result.get(columnName) == null)
+						if(details == Table.BESTELLUNG && (columnNames.get(i).equalsIgnoreCase("ausgeliefert") || columnNames.get(i).equalsIgnoreCase("bezahlt")))
+						{
+							result.put(columnName, 0);
+							result.put(String.valueOf(i), 0);
+						}
+						else if(!details.fieldAllowsNull(columnName))
+							throw new Exception(columnName + " doesn't allow null");
 				}
 				
 				// INSERT ausführen

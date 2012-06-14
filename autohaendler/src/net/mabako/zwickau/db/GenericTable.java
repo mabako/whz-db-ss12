@@ -15,7 +15,7 @@ public class GenericTable extends TableHandler
 	@Override
 	public Prepared fetchAll(String where, Object... objects)
 	{
-		return db.prepare("SELECT * FROM " + getTableName() + ( where != null ? (" WHERE " + where ) : ""));
+		return db.prepare("SELECT * FROM " + getTableName() + ( where != null ? (" WHERE " + where ) : "") + " ORDER BY id ASC");
 	}
 
 	/**
