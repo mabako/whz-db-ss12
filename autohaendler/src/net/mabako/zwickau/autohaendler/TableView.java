@@ -34,7 +34,7 @@ public class TableView extends JPanel
 	/**
 	 * Die Tabelle, in welcher die Daten dargestellt werden
 	 */
-	protected JTable table;
+	private JTable table;
 	
 	/**
 	 * Erstellt eine neue Tabellenansicht
