@@ -108,7 +108,7 @@ public class TableView extends JPanel
 			
 			// Simple kleine Textformatierung
 			for(final String[] data : new String[][]{
-					new String[]{"%s€", "preis"},
+					new String[]{"%s€", "preis", "gesamtpreis"},
 					new String[]{"%s km", "distanz"},
 					new String[]{"%s l/100km", "verbrauch"}
 				})
