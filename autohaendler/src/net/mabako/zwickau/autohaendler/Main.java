@@ -265,6 +265,7 @@ public class Main
 	private void displayContent()
 	{
 		frame.getContentPane().add(content.lastElement(), "cell 0 1,grow");
+		frame.validate();
 		
 		lblZurueck.setVisible(content.size() > 1);
 	}

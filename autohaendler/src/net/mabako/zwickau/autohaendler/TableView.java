@@ -15,13 +15,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import net.mabako.zwickau.db.Prepared;
 import net.mabako.zwickau.db.Result;
 import net.mabako.zwickau.db.Results;
+import net.mabako.zwickau.db.Table;
 
-import static net.mabako.zwickau.autohaendler.G.db;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
+
+import static net.mabako.zwickau.autohaendler.G.main;
 
 public class TableView extends JPanel
 {
@@ -39,19 +40,19 @@ public class TableView extends JPanel
 	 * Erstellt eine neue Tabellenansicht
 	 * @param details Name der entsprechenden Datenbanktabelle
 	 */
-	public TableView(TableDetails details) {
-		setLayout(new MigLayout("", "[][grow]", "[grow][]"));
+	public TableView(Table details) {
+		this(details, details.fetchAll());
+	}
+	
+	public TableView(Table details, Results model)
+	{
+		setLayout(new MigLayout("", "[grow]", "[grow][]"));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, "cell 0 0 2 1,grow");
 		
-		
-		Prepared p = db.prepare("SELECT * FROM " + details.toString().toLowerCase());
-		Results model = p.executeWithResult();
-		model.setTableName(details.toString().toLowerCase());
 		table = new JCustomTable(model);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		p.close();
 		
 		scrollPane.setViewportView(table);
 		
@@ -72,6 +73,7 @@ public class TableView extends JPanel
 				table.setModel(results);
 			}
 		});
+		add(btnAusgewhlteLschen, "cell 1 1,alignx right");
 		
 		JButton btnDrucken = new JButton("Drucken");
 		btnDrucken.addActionListener(new ActionListener()
@@ -88,7 +90,25 @@ public class TableView extends JPanel
 		});
 		
 		add(btnDrucken, "cell 0 1,alignx right");
-		add(btnAusgewhlteLschen, "cell 1 1,alignx right");
+		
+		if(details == Table.KUNDE)
+		{
+			JButton btnBestellungen = new JButton("Bestellungen Anzeigen");
+			btnBestellungen.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
+					int row = table.getSelectedRow();
+					if(row >= 0)
+					{
+						Result result = ((Results) table.getModel()).get(row);
+						main.addContent(new TableView(Table.BESTELLUNGEN, Table.BESTELLUNGEN.fetchAll("kunde_id = ?", result.getInt("id"))));
+					}
+				}
+			});
+			add(btnBestellungen, "cell 0 1, alignx right");
+		}
 	}
 	
 	private class JCustomTable extends JTable {
@@ -105,7 +125,7 @@ public class TableView extends JPanel
 			
 			// Simple kleine Textformatierung
 			for(final String[] data : new String[][]{
-					new String[]{"%s€", "preis"},
+					new String[]{"%s€", "preis", "gesamtpreis"},
 					new String[]{"%s km", "distanz"},
 					new String[]{"%s l/100km", "verbrauch"}
 				})
@@ -148,8 +168,7 @@ public class TableView extends JPanel
 					final HashMap<String, String> values = new HashMap<>();
 					
 					// Alle verlinkten Inhalte abfragen
-					Prepared p = db.prepare("SELECT * FROM " + model.getColumnName(columnIndex));
-					for(Result result : p.executeWithResult())
+					for(Result result : ((Results)model).fetchAssociated(model.getColumnName(columnIndex)))
 					{
 						// Zuordnung speichern
 						values.put(result.getInt("id").toString(), result.getString("name"));
@@ -157,7 +176,6 @@ public class TableView extends JPanel
 						// Ein Item in die Kombobox einfügen
 						box.addItem(new TableViewLink(result.getInt("id"), result.getString("name")));
 					}
-					p.close();
 					
 					// Editor, d.h. beim Bearbeiten wird die Kombobox angezeigt
 					getColumnModel().getColumn(columnIndex).setCellEditor(new DefaultCellEditor(box));
