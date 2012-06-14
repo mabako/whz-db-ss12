@@ -1,10 +1,14 @@
 package net.mabako.zwickau.db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import java.lang.reflect.Field;
 
 import net.mabako.zwickau.autohaendler.Config;
 
@@ -87,8 +91,59 @@ public class Database
 
 		Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
 
+		initializeLibraryPath();
+		
 		String connectionStr = "jdbc:jtds:sqlserver://" + server + "/" + Config.getDatabaseName();
 		con = DriverManager.getConnection(connectionStr, username, password);
+	}
+
+	private void initializeLibraryPath()
+	{
+		String pathToAdd = null;
+		try
+		{
+			System.loadLibrary("./lib/x86/ntlmauth");
+			pathToAdd = new File("lib", "x86").getAbsolutePath();
+		}
+		catch(UnsatisfiedLinkError e)
+		{
+			System.loadLibrary("./lib/x64/ntlmauth");
+			pathToAdd = new File("lib", "x64").getAbsolutePath();
+		}
+
+		// java.library.path kann nicht direkt zur Laufzeit geändert werden
+		try
+		{
+			Field usrPathsField = ClassLoader.class.getDeclaredField("usr_paths");
+			usrPathsField.setAccessible(true);
+			
+			// Aktuelle Pfade auslesen
+			final String[] paths = (String[])usrPathsField.get(null);
+			
+			// Pfad schon vorhanden?
+			for(String path : paths) {
+				if(path.equals(pathToAdd)) {
+					return;
+				}
+			}
+			
+			// neuen Pfad hinzufügen
+			final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
+			newPaths[newPaths.length-1] = pathToAdd;
+			usrPathsField.set(null, newPaths);
+		}
+		catch (NoSuchFieldException e)
+		{
+		}
+		catch (SecurityException e)
+		{
+		}
+		catch (IllegalArgumentException e)
+		{
+		}
+		catch (IllegalAccessException e)
+		{
+		}
 	}
 
 	/**
