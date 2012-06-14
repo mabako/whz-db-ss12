@@ -6,8 +6,14 @@ import java.util.Vector;
 
 public class PostenTable extends TableHandler
 {
+	/**
+	 * Die Bestellung, die für diese Posten relevant ist.
+	 */
 	private int bestellung;
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Prepared fetchAll(String where, Object... objects)
 	{
@@ -18,6 +24,9 @@ public class PostenTable extends TableHandler
 		return db.prepare("SELECT * FROM " + getTableName() + " WHERE " + where);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Prepared fetchAssociated(String columnName)
 	{
@@ -32,18 +41,27 @@ public class PostenTable extends TableHandler
 		throw new RuntimeException("unsupported associated column: " + columnName);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isFieldEditable(Result result, String columnName)
 	{
 		return "auto".equalsIgnoreCase(columnName);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean fieldAllowsNull(String columnName)
 	{
 		return !"auto".equalsIgnoreCase(columnName);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Result insert(Vector<String> columnNames, Result result)
 	{
@@ -59,6 +77,9 @@ public class PostenTable extends TableHandler
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean update(Result result, String column, Object value)
 	{
@@ -70,6 +91,9 @@ public class PostenTable extends TableHandler
 		return success;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean remove(Result result)
 	{
