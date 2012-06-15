@@ -10,4 +10,5 @@ autohaendler/manual/*.aux
 autohaendler/manual/*.out
 autohaendler/manual/*.log
 autohaendler/manual/*.gz
+autohaendler/manual/*.pdf
 autohaendler/manual/tmp
