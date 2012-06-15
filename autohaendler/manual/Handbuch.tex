@@ -1,0 +1,36 @@
+\documentclass[12pt,titlepage,a4paper]{scrreprt}
+\usepackage{ngerman}  % neue deutsche Rechtschreibung
+\usepackage{graphicx} % Grafiken einbinden
+\usepackage[utf8]{inputenc}
+\usepackage{xspace}
+\usepackage{longtable}
+
+% Überschriften beginnen normal am Rand
+\renewcommand*{\chapterheadstartvskip}{\vspace{-1.8\baselineskip}}
+
+% Aufzählungen kompakter gestalten -> überhaupt Formatierungsoptionen
+\usepackage{enumitem}
+
+% Verweise und Lesezeichen in PDF
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdfauthor = {Alexander Hahn}, pdftitle = {Autohändler
+Datenbankprogramm} }
+
+% Sans-Serif
+\renewcommand{\familydefault}{\sfdefault}
+
+% Makros für Namen
+\newcommand{\ah}{Alexander Hahn\xspace}
+\newcommand{\mb}{Marcus Bauer\xspace}
+
+% \ifnotempty = wenn der 1. Parameter nicht leer ist, wird der 2. Parameter
+% ausgegeben
+\usepackage{ifthen}
+\newcommand{\ifnotempty}[2]{\ifthenelse{\equal{#1}{}}{}{#2}}
+
+\begin{document} % Anfang des Dokuments
+
+\include{000-titel}
+\include{100-inhalt}
+
+\end{document} % Ende des Dokuments
