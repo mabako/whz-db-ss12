@@ -1,15 +1,10 @@
 \documentclass[12pt,titlepage,a4paper]{scrreprt}
 \usepackage{ngerman}  % neue deutsche Rechtschreibung
-\usepackage{graphicx} % Grafiken einbinden
 \usepackage[utf8]{inputenc}
 \usepackage{xspace}
-\usepackage{longtable}
 
 % Überschriften beginnen normal am Rand
 \renewcommand*{\chapterheadstartvskip}{\vspace{-1.8\baselineskip}}
-
-% Aufzählungen kompakter gestalten -> überhaupt Formatierungsoptionen
-\usepackage{enumitem}
 
 % Verweise und Lesezeichen in PDF
 \usepackage[hidelinks]{hyperref}
@@ -23,10 +18,9 @@ Datenbankprogramm} }
 \newcommand{\ah}{Alexander Hahn\xspace}
 \newcommand{\mb}{Marcus Bauer\xspace}
 
-% \ifnotempty = wenn der 1. Parameter nicht leer ist, wird der 2. Parameter
-% ausgegeben
-\usepackage{ifthen}
-\newcommand{\ifnotempty}[2]{\ifthenelse{\equal{#1}{}}{}{#2}}
+% Für die Titelseite
+\title{Nutzerhandbuch für das Datenbankprojekt "`Autohändler"'}
+\author{\ah, \mb}
 
 \begin{document} % Anfang des Dokuments
 
