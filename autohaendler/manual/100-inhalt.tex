@@ -1,17 +1,42 @@
-\chapter{Konfiguration}
-	In der Konfigurationsdatei app.xml können grundlegende Einstellungen
-	vorgenommen werden. Diese Datei ist vollständig ausdokumentiert und
-	größtenteils selbsterklärend.
+\chapter{Einrichtung}
+	\section{Konfiguration}
+		In der Konfigurationsdatei \textbf{config/app.xml} können grundlegende
+		Einstellungen vorgenommen werden. Diese Datei ist vollständig dokumentiert und
+		prinzipiell selbsterklärend.
+		
+		Die wahrscheinlich wichtigste Änderung ist die des Titels, welcher über
+		\texttt{<app:name>} festgelegt werden kann.
+		
+		Weiterhin können sowohl der Server, mit dem sich verbunden werden soll, sowie
+		die Datenbank, die angezeigt werden soll, hier geändert werden.
+		
+		Schlussendlich können die gewünschten Anmeldeverfahren (Windows-Anmeldung,
+		SQL-Server-Anmeldung) und das Farbschemata für das Programm eingestellt
+		werden.
 	
-	Zum einen kann die allgemeine Überschrift die im Programm angezeigt wird
-	geändert werden.
-	
-	Weiterhin können sowohl der Server, mit dem sich verbunden werden soll, sowie
-	die Datenbank, die angezeigt werden soll, hier geändert werden.
-	
-	Zu guter letzt können die gewünschten Anmeldeverfahren und das Farbschemata für
-	das Programm eingestellt werden.
-	
+	\section{Installation}
+		Es wird vorausgesetzt, dass der Datenbankserver bereits eingerichtet wurde.
+		Dies schließt die Einrichtung eines entsprechenden Datenbankschemas und eines
+		ersten Benutzers mit Zugriff auf die Datenbank ein.
+		
+		Um sämtliche Tabellen zu erzeugen, kann je nach Anmeldeart einer der folgenden
+		Befehle genutzt werden.
+		
+		\subsection*{Mittels Windows-Anmeldung}
+			Der Parameter \texttt{server} ist optional und wird alternativ aus der
+			Konfigurationsdatei geladen.
+			
+			\begin{verbatim}
+				java -cp autohaendler.jar net.mabako.migratetool.MigrateTool [server]
+			\end{verbatim}
+		
+		\subsection*{Mittels SQL-Server-Anmeldung}
+			Alle Parameter werden benötigt.
+			
+			\begin{verbatim}
+				java -cp autohaendler.jar net.mabako.migratetool.MigrateTool [server]
+				[benutzername] [passwort]
+			\end{verbatim}
 	
 \chapter{Anwendung}
 	\section{Anmeldung}
