@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+# LaTeX
+autohaendler/manual/*.aux
+autohaendler/manual/*.out
+autohaendler/manual/*.log
+autohaendler/manual/*.gz
+autohaendler/manual/tmp
