@@ -5,12 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import java.util.HashMap;
-
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -61,7 +63,7 @@ public class TableView extends JPanel
 		
 		if(details.hasPermissionTo("DELETE"))
 		{
-			JButton btnAusgewhlteLschen = new JButton("Ausgewählte Löschen");
+			final JButton btnAusgewhlteLschen = new JButton("Ausgewählte Löschen");
 			btnAusgewhlteLschen.addActionListener(new ActionListener()
 			{
 				@Override
@@ -79,6 +81,17 @@ public class TableView extends JPanel
 				}
 			});
 			add(btnAusgewhlteLschen, "cell 1 1,alignx right");
+			btnAusgewhlteLschen.setEnabled(false);
+
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+			{
+				@Override
+				public void valueChanged(ListSelectionEvent e)
+				{
+					// mindestens ein Element ausgewählt?
+					btnAusgewhlteLschen.setEnabled(!((DefaultListSelectionModel)e.getSource()).isSelectionEmpty());
+				}
+			});
 		}
 		
 		JButton btnDrucken = new JButton("Drucken");
@@ -99,7 +112,7 @@ public class TableView extends JPanel
 		
 		if(details == Table.KUNDE)
 		{
-			JButton btnBestellungen = new JButton("Bestellungen Anzeigen");
+			final JButton btnBestellungen = new JButton("Bestellungen Anzeigen");
 			btnBestellungen.addActionListener(new ActionListener()
 			{
 				@Override
@@ -114,11 +127,24 @@ public class TableView extends JPanel
 				}
 			});
 			add(btnBestellungen, "cell 1 1, alignx right");
+			btnBestellungen.setEnabled(false);
+
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+			{
+				@Override
+				public void valueChanged(ListSelectionEvent e)
+				{
+					DefaultListSelectionModel source = (DefaultListSelectionModel)e.getSource();
+					
+					// Genau 1 Element ausgewählt?
+					btnBestellungen.setEnabled(!source.isSelectionEmpty() && source.getMinSelectionIndex() == source.getMaxSelectionIndex());
+				}
+			});
 		}
 		
 		if(details == Table.BESTELLUNG)
 		{
-			JButton btnAutos = new JButton("Autos anzeigen");
+			final JButton btnAutos = new JButton("Autos anzeigen");
 			btnAutos.addActionListener(new ActionListener()
 			{
 				@Override
@@ -133,6 +159,19 @@ public class TableView extends JPanel
 				}
 			});
 			add(btnAutos, "cell 1 1, alignx right");
+			btnAutos.setEnabled(false);
+
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+			{
+				@Override
+				public void valueChanged(ListSelectionEvent e)
+				{
+					DefaultListSelectionModel source = (DefaultListSelectionModel)e.getSource();
+					
+					// Genau 1 Element ausgewählt?
+					btnAutos.setEnabled(!source.isSelectionEmpty() && source.getMinSelectionIndex() == source.getMaxSelectionIndex());
+				}
+			});
 		}
 	}
 	

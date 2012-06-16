@@ -1,6 +1,6 @@
 \chapter{Einrichtung}
-	\section{Konfiguration}
-		In der Konfigurationsdatei \textbf{config/app.xml} können grundlegende
+	\section{Konfiguration}\label{konfiguration}
+		In der Konfigurationsdatei \texttt{config/app.xml} können grundlegende
 		Einstellungen vorgenommen werden. Diese Datei ist vollständig dokumentiert und
 		prinzipiell selbsterklärend.
 		
@@ -17,27 +17,30 @@
 	\section{Installation}
 		Es wird vorausgesetzt, dass der Datenbankserver bereits eingerichtet wurde.
 		Dies schließt die Einrichtung eines entsprechenden Datenbankschemas und eines
-		ersten Benutzers mit Zugriff auf die Datenbank ein.
+		ersten Benutzers mit Zugriff auf die Datenbank ein. Sofern der Name des
+		Datenbankschemas vom Standardnamen \texttt{autohaendler} abweicht, muss dies
+		in der Konfigurationsdatei geändert werden.
 		
 		Um sämtliche Tabellen zu erzeugen, kann je nach Anmeldeart einer der folgenden
 		Befehle genutzt werden.
 		
 		\subsection*{Mittels Windows-Anmeldung}
-			Der Parameter \texttt{server} ist optional und wird alternativ aus der
-			Konfigurationsdatei geladen.
-			
 			\begin{verbatim}
 				java -cp autohaendler.jar net.mabako.migratetool.MigrateTool [server]
 			\end{verbatim}
-		
-		\subsection*{Mittels SQL-Server-Anmeldung}
-			Alle Parameter werden benötigt.
 			
+			Der Parameter \texttt{server} ist optional und wird alternativ aus der
+			Konfigurationsdatei geladen, standardmäßig ist \texttt{localhost}
+			voreingestellt.
+			
+		\subsection*{Mittels SQL-Server-Anmeldung}
 			\begin{verbatim}
 				java -cp autohaendler.jar net.mabako.migratetool.MigrateTool [server]
 				[benutzername] [passwort]
 			\end{verbatim}
 	
+			Alle Parameter werden benötigt.
+
 \chapter{Anwendung}
 	\section{Anmeldung}
 		Es besteht die Möglichkeit, sich über die Windows-Authentifizierung anzumelden
@@ -45,30 +48,52 @@
 		Nach der Anmeldung wird die Hauptansicht angezeigt, in der jede Tabelle der
 		Datenbank, als Button repräsentiert, aufgeführt ist.
 		
+		Die Konfiguration einzelner Anmeldemethoden erfolgt über die \texttt{app.xml},
+		wie in Kapitel \ref{konfiguration} beschrieben.
+		
 	\section{Tabellenwahl}
 		Durch einen linken Mausklick auf einen der Tabellennamen wird diese geöffnet.
 		Über den ``Zurück'' Button in der linken oberen Ecke wird wieder in die
 		Hauptansicht gewechselt.
 		
-	\section{Datensatz eingeben}
-		Datensätze können über Tastatur eingeben werden. Dabei wird die ID für
-		neue Datensätze immer automatisch erstellt und muss nicht extra angeben
-		werden.
-		Zu beachten ist, dass Dezimalzahlen nicht mit einem ',' sondern einem '.'
-		eingegeben werden müssen.
+	\section{Datensatz eingeben und ändern}
+		Datensätze können über Tastatur eingeben werden. Zu beachten ist, dass
+		Dezimalzahlen nicht mit einem ',' sondern einem '.' eingegeben werden müssen.
 		
-	\section{Datensatz ändern}
 		Um Datensätze zu ändern, müssen vorher die entsprechenden Einträge mit der
 		Rücktaste gelöscht werden, da der Cursor immer automatisch am Ende der
 		Zeichenkette steht.
 		
+		Das Feld \texttt{id} wird automatisch gefüllt, nachdem der Datensatz
+		alle benötigten Felder ausgefüllt wurden und erfolgreich angelegt wurde.
+		Sofern in der Spalte ein Wert für \texttt{id} vorhanden ist, wird der
+		Datensatz nach jeder Änderung gespeichert.
+		
 	\section{Datensatz löschen}
-		Um Datensätze zu löschen, müssen die entsprechenden Zeilen mit Hilfe der
-		Shift- und Strg-Tasten ausgewählt werden, bevor der ``Ausgewählte löschen''
-		Button betätigt wird.
+		Um Datensätze zu löschen, müssen die entsprechenden Zeilen, unter Umständen
+		mithilfe der Shift- und Strg-Tasten ausgewählt werden, bevor der "`Ausgewählte
+		löschen"'-Button betätigt wird.
 		
 	\section{Tabelle drucken}
-		Zum Drucken einer Tabelle muss der ``Drucken'' Button betätigt werden.
-		Daraufhin erscheint das übliche Druckmenü, in dem Drucker ausgewählt und
-		Seiteneinstellungen vorgenommen werden können.
+		Jede Tabelle kann über den Button "`Drucken"' ausgegeben werden.
+		Daraufhin erscheint das übliche systeminterne Druckmenü, in dem Drucker
+		ausgewählt und Seiteneinstellungen vorgenommen werden können.
 	
+	\section{Bestellungen der einzelnen Kundenanzeigen}\label{bestellungen_anzeigen}
+		Bei Verwendung der Kunden-Tabelle können
+		für jeden Kunden neue Bestellungen anzeigt und existierende verändert werden.
+		Dazu muss genau ein Kunde ausgewählt werden und danach die Schaltfläche
+		"`Bestellungen anzeigen"' verwendet werden.
+	
+	\section{Einzelne Posten in einer Bestellung anzeigen}
+		Analog zum Anzeigen der Bestellungen eines Kunden können die Autos in dieser
+		Bestellung angezeigt werden, dazu kann die Schaltfläche "`Autos anzeigen"'
+		genutzt werden.
+		
+		Der Gesamtbetrag der Rechnung wird bei Hinzufügen, Ändern und Löschen von
+		Posten in der Bestellung aktualisiert, jedoch muss die Tabelle für die
+		korrekte Anzeige noch einmal neu geladen werden. Dies kann über Auswahl von
+		"`Zurück"' und nachfolgender Auswahl der Bestellungen der Kunden
+		(Kapitel \ref{bestellungen_anzeigen}) bzw. der gesamten Liste der Bestellungen
+		(im Hauptmenü) erfolgen.
+
