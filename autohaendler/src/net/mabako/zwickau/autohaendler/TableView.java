@@ -200,7 +200,7 @@ public class TableView extends JPanel
 					public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
 					{
 						// Standardmäßig als Double-Wert abfragen
-						DefaultTableCellRenderer.UIResource component = (DefaultTableCellRenderer.UIResource) getDefaultRenderer(Double.class).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+						DefaultTableCellRenderer.UIResource component = (DefaultTableCellRenderer.UIResource) getDefaultRenderer(String.class).getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 						
 						// den text auslesen
 						String text = component.getText();
